@@ -23,12 +23,49 @@ namespace AnyDeckBuilder
         }
         private void saveProjectButton_Click(object sender, EventArgs e)
         {
+            SaveCurrent();
+        }
+
+        private void SaveCurrent()
+        {
+            if (ProjectFile.Current.FilePath == null || ProjectFile.Current.FilePath == string.Empty)
+            {
+                SaveAs();
+                return;
+            }
+
+            try
+            {
+                using (var stream = new FileStream(ProjectFile.Current.FilePath, FileMode.Create))
+                {
+                    // get bytes from text you want to save
+                    byte[] data = new UTF8Encoding().GetBytes(ProjectFile.Current.ToJSON());
+                    stream.Write(data, 0, data.Length);
+                    stream.Flush();
+                }
+            }
+            catch (SecurityException ex)
+            {
+                MessageBox.Show($"Security error.\n\nError message: {ex.Message}\n\n" +
+                $"Details:\n\n{ex.StackTrace}");
+            }
+        }
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveAs();
+        }
+
+        private void SaveAs()
+        {
+            saveProjectDIalog.FileName = ProjectFile.Current.Name;
             if (saveProjectDIalog.ShowDialog() == DialogResult.OK)
             {
                 try
                 {
                     using (var stream = new FileStream(saveProjectDIalog.FileName, FileMode.Create))
                     {
+                        ProjectFile.Current.FilePath = saveProjectDIalog.FileName;
+
                         // get bytes from text you want to save
                         byte[] data = new UTF8Encoding().GetBytes(ProjectFile.Current.ToJSON());
                         stream.Write(data, 0, data.Length);
@@ -53,8 +90,10 @@ namespace AnyDeckBuilder
                     using (var sr = new StreamReader(stream))
                     {
                         var jsonString = sr.ReadToEnd();
-                        var projectFile = Newtonsoft.Json.JsonConvert.DeserializeObject(jsonString);
+                        var projectFile = Newtonsoft.Json.JsonConvert.DeserializeObject<ProjectFile>(jsonString);
                         Console.WriteLine($"Opening project file {stream.Name}");
+                        ProjectFile.SetCurrent(projectFile);
+                        LoadProjectData();
                     }
                 }
             }
@@ -71,7 +110,13 @@ namespace AnyDeckBuilder
                 selectedDeck = ProjectFile.Current.decks[0];
             }
 
+            ReloadNodesPanel();
+            LoadDeck(selectedDeck);
+        }
 
+        private void ReloadNodesPanel()
+        {
+            deckView.Nodes.Clear();
             for (int i = 0; i < ProjectFile.Current.decks.Count; i++)
             {
                 var deck = ProjectFile.Current.decks[i];
@@ -83,19 +128,22 @@ namespace AnyDeckBuilder
                 foreach (var card in deck.cards)
                 {
                     deckView.Nodes[i].Nodes.Add(card.name);
-
-                    AddCardDisplay(card);
                 }
             }
-
-            LoadDeck(selectedDeck);
         }
 
         private void LoadDeck(Deck selectedDeck)
         {
+            if (selectedDeck == null)
+                return;
+
             if (layoutPanel.Controls.Count > 0)
                 EmptyLayout();
 
+            foreach (var card in selectedDeck.cards)
+            {
+                AddCardDisplay(card);
+            }
         }
 
         private void EmptyLayout()
@@ -113,7 +161,6 @@ namespace AnyDeckBuilder
             var display = new CardDisplay(card);
             display.Size = currentSize;
             layoutPanel.Controls.Add(display);
-            selectedDeck?.AddCard(card);
         }
         #endregion
         #region Panel1
@@ -159,6 +206,7 @@ namespace AnyDeckBuilder
         private void UpdateDeckView(object? sender, Card card)
         {
             if (!ProjectFile.Current.autoAddCardToCurrentDeck) return;
+            selectedDeck?.AddCard(card);
             AddCardDisplay(card);
         }
 
@@ -240,5 +288,6 @@ namespace AnyDeckBuilder
             new CardCustomizationForm().ShowDialog();
         }
         #endregion
+
     }
 }

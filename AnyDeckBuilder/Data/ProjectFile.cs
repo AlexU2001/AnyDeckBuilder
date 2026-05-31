@@ -6,6 +6,9 @@
         private static ProjectFile m_current = new ProjectFile();
         public List<Deck> decks = new List<Deck>();
         public List<Card> cards = new List<Card>();
+        public string Name => FilePath == null || FilePath.Length == 0 ? "New Project" : Path.GetFileName(FilePath);
+        public string FilePath = string.Empty;
+
 
         #region Preferences
         public bool autoAddCardToCurrentDeck;

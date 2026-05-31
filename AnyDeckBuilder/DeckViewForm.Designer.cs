@@ -34,6 +34,12 @@
             layoutPanel = new FlowLayoutPanel();
             deckToolbar = new ToolStrip();
             newCardButton = new ToolStripButton();
+            addCardsButton = new ToolStripDropDownButton();
+            importjsonToolStripMenuItem = new ToolStripMenuItem();
+            importcsvToolStripMenuItem = new ToolStripMenuItem();
+            csvToolStripMenuItem = new ToolStripMenuItem();
+            tsvToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator3 = new ToolStripSeparator();
             searchLabel = new ToolStripLabel();
             searchTextbox = new ToolStripTextBox();
             zoomLabel = new ToolStripLabel();
@@ -50,7 +56,7 @@
             toolStripMenuItem10 = new ToolStripMenuItem();
             toolStripMenuItem11 = new ToolStripMenuItem();
             plusZoomButton = new ToolStripButton();
-            toolStripButton1 = new ToolStripButton();
+            toolStripSeparator2 = new ToolStripSeparator();
             BottomToolStripPanel = new ToolStripPanel();
             TopToolStripPanel = new ToolStripPanel();
             RightToolStripPanel = new ToolStripPanel();
@@ -58,7 +64,6 @@
             ContentPanel = new ToolStripContentPanel();
             newFileButton = new ToolStripButton();
             openToolStripButton = new ToolStripButton();
-            saveProjectButton = new ToolStripButton();
             printToolStripButton = new ToolStripButton();
             toolStripSeparator = new ToolStripSeparator();
             cutToolStripButton = new ToolStripButton();
@@ -67,9 +72,12 @@
             toolStripSeparator1 = new ToolStripSeparator();
             helpToolStripButton = new ToolStripButton();
             projectToolbar = new ToolStrip();
+            saveDropdownButton = new ToolStripDropDownButton();
+            saveToolStripMenuItem = new ToolStripMenuItem();
+            saveAsToolStripMenuItem = new ToolStripMenuItem();
+            toolStripButton1 = new ToolStripButton();
             saveProjectDIalog = new SaveFileDialog();
             openProjectDialog = new OpenFileDialog();
-            addCardsButton = new ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -118,7 +126,7 @@
             // deckToolbar
             // 
             deckToolbar.ImageScalingSize = new Size(24, 24);
-            deckToolbar.Items.AddRange(new ToolStripItem[] { newCardButton, addCardsButton, searchLabel, searchTextbox, zoomLabel, minusZoomButton, zoomAmountDropDown, plusZoomButton, toolStripButton1 });
+            deckToolbar.Items.AddRange(new ToolStripItem[] { newCardButton, addCardsButton, toolStripSeparator3, searchLabel, searchTextbox, zoomLabel, minusZoomButton, zoomAmountDropDown, plusZoomButton, toolStripSeparator2 });
             deckToolbar.Location = new Point(0, 0);
             deckToolbar.Name = "deckToolbar";
             deckToolbar.Size = new Size(762, 34);
@@ -134,6 +142,46 @@
             newCardButton.Size = new Size(34, 29);
             newCardButton.Text = "New Card";
             newCardButton.Click += newCardButton_Click;
+            // 
+            // addCardsButton
+            // 
+            addCardsButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            addCardsButton.DropDownItems.AddRange(new ToolStripItem[] { importjsonToolStripMenuItem, importcsvToolStripMenuItem });
+            addCardsButton.Image = (Image)resources.GetObject("addCardsButton.Image");
+            addCardsButton.ImageTransparentColor = Color.Magenta;
+            addCardsButton.Name = "addCardsButton";
+            addCardsButton.Size = new Size(42, 29);
+            addCardsButton.Text = "Add Existing Cards";
+            // 
+            // importjsonToolStripMenuItem
+            // 
+            importjsonToolStripMenuItem.Name = "importjsonToolStripMenuItem";
+            importjsonToolStripMenuItem.Size = new Size(269, 34);
+            importjsonToolStripMenuItem.Text = "import .json";
+            // 
+            // importcsvToolStripMenuItem
+            // 
+            importcsvToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { csvToolStripMenuItem, tsvToolStripMenuItem });
+            importcsvToolStripMenuItem.Name = "importcsvToolStripMenuItem";
+            importcsvToolStripMenuItem.Size = new Size(269, 34);
+            importcsvToolStripMenuItem.Text = "import spreadsheet";
+            // 
+            // csvToolStripMenuItem
+            // 
+            csvToolStripMenuItem.Name = "csvToolStripMenuItem";
+            csvToolStripMenuItem.Size = new Size(143, 34);
+            csvToolStripMenuItem.Text = ".csv";
+            // 
+            // tsvToolStripMenuItem
+            // 
+            tsvToolStripMenuItem.Name = "tsvToolStripMenuItem";
+            tsvToolStripMenuItem.Size = new Size(143, 34);
+            tsvToolStripMenuItem.Text = ".tsv";
+            // 
+            // toolStripSeparator3
+            // 
+            toolStripSeparator3.Name = "toolStripSeparator3";
+            toolStripSeparator3.Size = new Size(6, 34);
             // 
             // searchLabel
             // 
@@ -246,15 +294,10 @@
             plusZoomButton.ToolTipText = "Zoom In";
             plusZoomButton.Click += PlusZoomButton_Click;
             // 
-            // toolStripButton1
+            // toolStripSeparator2
             // 
-            toolStripButton1.Alignment = ToolStripItemAlignment.Right;
-            toolStripButton1.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            toolStripButton1.Image = Properties.Resources.GearIcon1;
-            toolStripButton1.ImageTransparentColor = Color.Magenta;
-            toolStripButton1.Name = "toolStripButton1";
-            toolStripButton1.Size = new Size(34, 29);
-            toolStripButton1.Text = "toolStripButton1";
+            toolStripSeparator2.Name = "toolStripSeparator2";
+            toolStripSeparator2.Size = new Size(6, 34);
             // 
             // BottomToolStripPanel
             // 
@@ -311,16 +354,6 @@
             openToolStripButton.Size = new Size(34, 28);
             openToolStripButton.Text = "&Open";
             openToolStripButton.Click += openToolStripButton_Click;
-            // 
-            // saveProjectButton
-            // 
-            saveProjectButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            saveProjectButton.Image = (Image)resources.GetObject("saveProjectButton.Image");
-            saveProjectButton.ImageTransparentColor = Color.Magenta;
-            saveProjectButton.Name = "saveProjectButton";
-            saveProjectButton.Size = new Size(34, 28);
-            saveProjectButton.Text = "&Save";
-            saveProjectButton.Click += saveProjectButton_Click;
             // 
             // printToolStripButton
             // 
@@ -380,12 +413,50 @@
             // projectToolbar
             // 
             projectToolbar.ImageScalingSize = new Size(24, 24);
-            projectToolbar.Items.AddRange(new ToolStripItem[] { newFileButton, openToolStripButton, saveProjectButton, printToolStripButton, toolStripSeparator, cutToolStripButton, copyToolStripButton, pasteToolStripButton, toolStripSeparator1, helpToolStripButton });
+            projectToolbar.Items.AddRange(new ToolStripItem[] { newFileButton, openToolStripButton, saveDropdownButton, printToolStripButton, toolStripSeparator, cutToolStripButton, copyToolStripButton, pasteToolStripButton, toolStripSeparator1, helpToolStripButton, toolStripButton1 });
             projectToolbar.Location = new Point(0, 0);
             projectToolbar.Name = "projectToolbar";
             projectToolbar.Size = new Size(1147, 33);
             projectToolbar.TabIndex = 1;
             projectToolbar.Text = "toolStrip2";
+            // 
+            // saveDropdownButton
+            // 
+            saveDropdownButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            saveDropdownButton.DropDownItems.AddRange(new ToolStripItem[] { saveToolStripMenuItem, saveAsToolStripMenuItem });
+            saveDropdownButton.Image = Properties.Resources.Save_Icon;
+            saveDropdownButton.ImageTransparentColor = Color.Magenta;
+            saveDropdownButton.Name = "saveDropdownButton";
+            saveDropdownButton.Size = new Size(42, 28);
+            saveDropdownButton.Text = "&Save";
+            // 
+            // saveToolStripMenuItem
+            // 
+            saveToolStripMenuItem.Image = Properties.Resources.Save_Icon;
+            saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            saveToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.S;
+            saveToolStripMenuItem.Size = new Size(285, 34);
+            saveToolStripMenuItem.Text = "Save";
+            saveToolStripMenuItem.Click += saveProjectButton_Click;
+            // 
+            // saveAsToolStripMenuItem
+            // 
+            saveAsToolStripMenuItem.Image = Properties.Resources.SaveAs_Icon;
+            saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
+            saveAsToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Shift | Keys.S;
+            saveAsToolStripMenuItem.Size = new Size(285, 34);
+            saveAsToolStripMenuItem.Text = "Save As";
+            saveAsToolStripMenuItem.Click += saveAsToolStripMenuItem_Click;
+            // 
+            // toolStripButton1
+            // 
+            toolStripButton1.Alignment = ToolStripItemAlignment.Right;
+            toolStripButton1.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            toolStripButton1.Image = Properties.Resources.GearIcon;
+            toolStripButton1.ImageTransparentColor = Color.Magenta;
+            toolStripButton1.Name = "toolStripButton1";
+            toolStripButton1.Size = new Size(34, 28);
+            toolStripButton1.Text = "toolStripButton1";
             // 
             // saveProjectDIalog
             // 
@@ -397,15 +468,6 @@
             openProjectDialog.FileName = "Open Project";
             openProjectDialog.Filter = "AnyDeckBuilder File |*.adbp";
             // 
-            // addCardsButton
-            // 
-            addCardsButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            addCardsButton.Image = (Image)resources.GetObject("addCardsButton.Image");
-            addCardsButton.ImageTransparentColor = Color.Magenta;
-            addCardsButton.Name = "addCardsButton";
-            addCardsButton.Size = new Size(34, 29);
-            addCardsButton.Text = "Add Existing Cards";
-            // 
             // DeckViewForm
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
@@ -414,6 +476,7 @@
             ClientSize = new Size(1147, 975);
             Controls.Add(projectToolbar);
             Controls.Add(splitContainer1);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "DeckViewForm";
             Text = "Any Deck Builder";
             splitContainer1.Panel1.ResumeLayout(false);
@@ -452,7 +515,6 @@
         private ToolStripMenuItem toolStripMenuItem9;
         private ToolStripMenuItem toolStripMenuItem10;
         private ToolStripMenuItem toolStripMenuItem11;
-        private ToolStripButton toolStripButton1;
         private ToolStripPanel BottomToolStripPanel;
         private ToolStripPanel TopToolStripPanel;
         private ToolStripPanel RightToolStripPanel;
@@ -460,7 +522,6 @@
         private ToolStripContentPanel ContentPanel;
         private ToolStripButton newFileButton;
         private ToolStripButton openToolStripButton;
-        private ToolStripButton saveProjectButton;
         private ToolStripButton printToolStripButton;
         private ToolStripSeparator toolStripSeparator;
         private ToolStripButton cutToolStripButton;
@@ -472,6 +533,16 @@
         private SaveFileDialog saveProjectDIalog;
         private OpenFileDialog openProjectDialog;
         private TreeView deckView;
-        private ToolStripButton addCardsButton;
+        private ToolStripSeparator toolStripSeparator2;
+        private ToolStripSeparator toolStripSeparator3;
+        private ToolStripDropDownButton addCardsButton;
+        private ToolStripMenuItem importcsvToolStripMenuItem;
+        private ToolStripMenuItem importjsonToolStripMenuItem;
+        private ToolStripMenuItem csvToolStripMenuItem;
+        private ToolStripMenuItem tsvToolStripMenuItem;
+        private ToolStripDropDownButton saveDropdownButton;
+        private ToolStripMenuItem saveToolStripMenuItem;
+        private ToolStripMenuItem saveAsToolStripMenuItem;
+        private ToolStripButton toolStripButton1;
     }
 }

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CardCustomizationForm));
             cardImage = new PictureBox();
             openImageFileDialog = new OpenFileDialog();
             nameTextBox = new TextBox();
@@ -155,7 +156,7 @@
             addToCurrentDeckCheckBox.UseVisualStyleBackColor = true;
             addToCurrentDeckCheckBox.CheckedChanged += checkBox1_CheckedChanged;
             // 
-            // CardCreateForm
+            // CardCustomizationForm
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -171,8 +172,9 @@
             Controls.Add(descriptionTextBox);
             Controls.Add(idTextBox);
             Controls.Add(nameTextBox);
-            Name = "CardCreateForm";
-            Text = "Create Card";
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            Name = "CardCustomizationForm";
+            Text = "Edit Card";
             ((System.ComponentModel.ISupportInitialize)cardImage).EndInit();
             ResumeLayout(false);
             PerformLayout();

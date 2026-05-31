@@ -1,5 +1,4 @@
 ﻿using AnyDeckBuilder.Data;
-using AnyDeckBuilder.Data;
 using System.Security;
 
 namespace AnyDeckBuilder
@@ -20,6 +19,7 @@ namespace AnyDeckBuilder
 
         public CardCustomizationForm(CardDisplay display)
         {
+            this.Text = "Edit Card";
             this.display = display;
             this.card = display.card;
             InitializeComponent();

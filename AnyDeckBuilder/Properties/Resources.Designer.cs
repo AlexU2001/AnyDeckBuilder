@@ -113,6 +113,26 @@ namespace AnyDeckBuilder.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Save_Icon {
+            get {
+                object obj = ResourceManager.GetObject("Save_Icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SaveAs_Icon {
+            get {
+                object obj = ResourceManager.GetObject("SaveAs_Icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap TwoStepsAhead {
             get {
                 object obj = ResourceManager.GetObject("TwoStepsAhead", resourceCulture);

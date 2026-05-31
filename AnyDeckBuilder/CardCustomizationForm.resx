@@ -120,4 +120,17 @@
   <metadata name="openImageFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>208, 17</value>
   </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        AAABAAEAQEAAAAAAIADGAQAAFgAAAIlQTkcNChoKAAAADUlIRFIAAABAAAAAQAgGAAAAqmlx3gAAAAFz
+        UkdCAK7OHOkAAAAEZ0FNQQAAsY8L/GEFAAAACXBIWXMAABYlAAAWJQFJUiTwAAABW0lEQVR4Xu2QQW6E
+        QBAD+Ur+/8iNAa1lkmYvw9gkdEl1Hdf08o94FT6G1/L6+u2DjtAH6AP0AfoAfYA+wE0O8B72en6AT15K
+        NXCd1QdH3d++hGPsDKsPjLq/PcwhdAbb29UHRt2bh5n6+ZXt/eoDo15wgOmfX9k2qg+M+lcOsKJbpecf
+        /OQwfCwFG84PMBUGpGBDH6AP0AfoA/QB+gAPPkDtdDiWQhugHY6n0AZoh+MptAHa4XgKbYB2OJ5CG6Ad
+        jqfQBmiH4ym0AdrheAptgHY4nkIboB2Op9AGaIfjKbQB2uF4Cm2AdjieQhugHY6n0AZoh+MptAHa4XgK
+        bYB2OJ5CG6AdjqfQBmiH4ym0AdrheAptgHY4nkIboB2Op9AGaIfjKbQB2uF4Cm2AdjieQhugHY6n0AYY
+        gQFudBvGOIS4+LkLo1RBTm9BFebwdlSRM2yapmmaphlgWb4B9Gv/ZJzl+igAAAAASUVORK5CYII=
+</value>
+  </data>
 </root>
