@@ -83,29 +83,9 @@ namespace AnyDeckBuilder.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Cute_Doggo {
-            get {
-                object obj = ResourceManager.GetObject("Cute Doggo", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap GearIcon {
             get {
                 object obj = ResourceManager.GetObject("GearIcon", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap GearIcon1 {
-            get {
-                object obj = ResourceManager.GetObject("GearIcon1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -126,16 +106,6 @@ namespace AnyDeckBuilder.Properties {
         internal static System.Drawing.Bitmap SaveAs_Icon {
             get {
                 object obj = ResourceManager.GetObject("SaveAs_Icon", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap TwoStepsAhead {
-            get {
-                object obj = ResourceManager.GetObject("TwoStepsAhead", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

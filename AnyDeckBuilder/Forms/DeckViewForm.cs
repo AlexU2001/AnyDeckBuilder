@@ -1,4 +1,5 @@
 using AnyDeckBuilder.Data;
+using System.Drawing.Imaging;
 using System.Security;
 using System.Text;
 
@@ -6,6 +7,7 @@ namespace AnyDeckBuilder
 {
     public partial class DeckViewForm : Form
     {
+        private const int EXPORT_COLUMNS = 10;
         public Deck? selectedDeck;
         public DeckViewForm()
         {
@@ -289,5 +291,46 @@ namespace AnyDeckBuilder
         }
         #endregion
 
+        private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (selectedDeck == null || selectedDeck.cards == null)
+                return;
+
+            int count = selectedDeck.cards.Count;
+            int rows = (count / EXPORT_COLUMNS) + 1;
+
+            var referenceCard = selectedDeck.cards[0];
+            for (int i = 1; i < count && referenceCard.imagePath == null; i++)
+            {
+                referenceCard = selectedDeck.cards[i];
+            }
+            Image referenceImage = Bitmap.FromFile(referenceCard.imagePath);
+            var refWidth = referenceImage.Width;
+            var refHeight = referenceImage.Height;
+            using (var canvas = new Bitmap(refWidth * EXPORT_COLUMNS, refHeight * rows, PixelFormat.Format32bppArgb))
+            {
+                using (var gr = Graphics.FromImage(canvas))
+                {
+                    gr.Clear(Color.Black);
+                    int index = 0;
+                    foreach (var currentCard in selectedDeck.cards)
+                    {
+                        if (currentCard.imagePath == null)
+                            continue;
+
+                        Image image = Bitmap.FromFile(currentCard.imagePath);
+                        int width = refWidth * index;
+                        int height = refHeight * (index / EXPORT_COLUMNS);
+                        var rectangle = new Rectangle(width, height, refWidth, refHeight);
+                        Console.WriteLine($"Rectangle: {rectangle}");
+                        gr.DrawImage(image, rectangle);
+                        string path = Path.Combine(Path.GetDirectoryName(ProjectFile.Current.FilePath), "TestExport.png");
+                        canvas.Save(path, ImageFormat.Png);
+
+                        index++;
+                    }
+                }
+            }
+        }
     }
 }

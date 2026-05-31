@@ -38,7 +38,7 @@ namespace AnyDeckBuilder
             // cardImage
             // 
             cardImage.Dock = DockStyle.Fill;
-            cardImage.Image = Properties.Resources.Cute_Doggo;
+            cardImage.Image = Properties.Resources.ClickToSelectAnImage;
             cardImage.Location = new Point(0, 0);
             cardImage.Name = "cardImage";
             cardImage.Size = new Size(540, 810);
