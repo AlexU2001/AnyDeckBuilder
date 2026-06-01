@@ -52,7 +52,7 @@ namespace AnyDeckBuilder
                 $"Details:\n\n{ex.StackTrace}");
             }
         }
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void saveProjectAsButton_Click(object sender, EventArgs e)
         {
             SaveAs();
         }
@@ -395,6 +395,11 @@ namespace AnyDeckBuilder
             int rows = dimensions.Height;
             Console.WriteLine($"Card Size: {cardSize} Dimensions: {dimensions}");
             return new Size(cardSize.Width * columns, cardSize.Height * rows);
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

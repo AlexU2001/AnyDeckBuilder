@@ -86,9 +86,7 @@
             closeToolStripMenuItem = new ToolStripMenuItem();
             exitToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator4 = new ToolStripSeparator();
-            saveDropdownButton = new ToolStripDropDownButton();
-            saveToolStripMenuItem = new ToolStripMenuItem();
-            saveAsToolStripMenuItem = new ToolStripMenuItem();
+            saveButton = new ToolStripButton();
             toolStripButton3 = new ToolStripButton();
             toolStripButton1 = new ToolStripButton();
             saveProjectDIalog = new SaveFileDialog();
@@ -172,14 +170,14 @@
             // importjsonToolStripMenuItem
             // 
             importjsonToolStripMenuItem.Name = "importjsonToolStripMenuItem";
-            importjsonToolStripMenuItem.Size = new Size(270, 34);
+            importjsonToolStripMenuItem.Size = new Size(269, 34);
             importjsonToolStripMenuItem.Text = "import .json";
             // 
             // importcsvToolStripMenuItem
             // 
             importcsvToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { csvToolStripMenuItem, tsvToolStripMenuItem });
             importcsvToolStripMenuItem.Name = "importcsvToolStripMenuItem";
-            importcsvToolStripMenuItem.Size = new Size(270, 34);
+            importcsvToolStripMenuItem.Size = new Size(269, 34);
             importcsvToolStripMenuItem.Text = "import spreadsheet";
             // 
             // csvToolStripMenuItem
@@ -434,7 +432,7 @@
             // projectToolbar
             // 
             projectToolbar.ImageScalingSize = new Size(24, 24);
-            projectToolbar.Items.AddRange(new ToolStripItem[] { toolStripButton2, toolStripSeparator4, newFileButton, openToolStripButton, saveDropdownButton, toolStripButton3, printToolStripButton, toolStripSeparator, cutToolStripButton, copyToolStripButton, pasteToolStripButton, toolStripSeparator1, helpToolStripButton, toolStripButton1 });
+            projectToolbar.Items.AddRange(new ToolStripItem[] { toolStripButton2, toolStripSeparator4, newFileButton, openToolStripButton, saveButton, toolStripButton3, printToolStripButton, toolStripSeparator, cutToolStripButton, copyToolStripButton, pasteToolStripButton, toolStripSeparator1, helpToolStripButton, toolStripButton1 });
             projectToolbar.Location = new Point(0, 0);
             projectToolbar.Name = "projectToolbar";
             projectToolbar.Size = new Size(1147, 34);
@@ -458,6 +456,7 @@
             newToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.N;
             newToolStripMenuItem.Size = new Size(308, 34);
             newToolStripMenuItem.Text = "New";
+            newToolStripMenuItem.Click += newFileButton_Click;
             // 
             // openToolStripMenuItem
             // 
@@ -466,6 +465,7 @@
             openToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.O;
             openToolStripMenuItem.Size = new Size(308, 34);
             openToolStripMenuItem.Text = "Open";
+            openToolStripMenuItem.Click += openToolStripButton_Click;
             // 
             // openRecentToolStripMenuItem
             // 
@@ -485,6 +485,7 @@
             saveToolStripMenuItem1.ShortcutKeys = Keys.Control | Keys.S;
             saveToolStripMenuItem1.Size = new Size(308, 34);
             saveToolStripMenuItem1.Text = "Save";
+            saveToolStripMenuItem1.Click += saveProjectButton_Click;
             // 
             // saveAsToolStripMenuItem1
             // 
@@ -493,6 +494,7 @@
             saveAsToolStripMenuItem1.ShortcutKeys = Keys.Control | Keys.Shift | Keys.S;
             saveAsToolStripMenuItem1.Size = new Size(308, 34);
             saveAsToolStripMenuItem1.Text = "Save As";
+            saveAsToolStripMenuItem1.Click += saveProjectAsButton_Click;
             // 
             // exportToolStripMenuItem
             // 
@@ -534,39 +536,22 @@
             exitToolStripMenuItem.ShortcutKeys = Keys.Alt | Keys.F4;
             exitToolStripMenuItem.Size = new Size(308, 34);
             exitToolStripMenuItem.Text = "Exit";
+            exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
             // 
             // toolStripSeparator4
             // 
             toolStripSeparator4.Name = "toolStripSeparator4";
             toolStripSeparator4.Size = new Size(6, 34);
             // 
-            // saveDropdownButton
+            // saveButton
             // 
-            saveDropdownButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            saveDropdownButton.DropDownItems.AddRange(new ToolStripItem[] { saveToolStripMenuItem, saveAsToolStripMenuItem });
-            saveDropdownButton.Image = Properties.Resources.Save_Icon;
-            saveDropdownButton.ImageTransparentColor = Color.Magenta;
-            saveDropdownButton.Name = "saveDropdownButton";
-            saveDropdownButton.Size = new Size(42, 29);
-            saveDropdownButton.Text = "&Save";
-            // 
-            // saveToolStripMenuItem
-            // 
-            saveToolStripMenuItem.Image = Properties.Resources.Save_Icon;
-            saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            saveToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.S;
-            saveToolStripMenuItem.Size = new Size(285, 34);
-            saveToolStripMenuItem.Text = "Save";
-            saveToolStripMenuItem.Click += saveProjectButton_Click;
-            // 
-            // saveAsToolStripMenuItem
-            // 
-            saveAsToolStripMenuItem.Image = Properties.Resources.SaveAs_Icon;
-            saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            saveAsToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Shift | Keys.S;
-            saveAsToolStripMenuItem.Size = new Size(285, 34);
-            saveAsToolStripMenuItem.Text = "Save As";
-            saveAsToolStripMenuItem.Click += saveAsToolStripMenuItem_Click;
+            saveButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            saveButton.Image = Properties.Resources.Save_Icon;
+            saveButton.ImageTransparentColor = Color.Magenta;
+            saveButton.Name = "saveButton";
+            saveButton.Size = new Size(34, 29);
+            saveButton.Text = "&Save";
+            saveButton.Click += saveProjectButton_Click;
             // 
             // toolStripButton3
             // 
@@ -576,6 +561,7 @@
             toolStripButton3.Name = "toolStripButton3";
             toolStripButton3.Size = new Size(34, 29);
             toolStripButton3.Text = "exportButton";
+            toolStripButton3.Click += exportToolStripMenuItem_Click;
             // 
             // toolStripButton1
             // 
@@ -673,9 +659,6 @@
         private ToolStripMenuItem importjsonToolStripMenuItem;
         private ToolStripMenuItem csvToolStripMenuItem;
         private ToolStripMenuItem tsvToolStripMenuItem;
-        private ToolStripDropDownButton saveDropdownButton;
-        private ToolStripMenuItem saveToolStripMenuItem;
-        private ToolStripMenuItem saveAsToolStripMenuItem;
         private ToolStripButton toolStripButton1;
         private ToolStripSeparator toolStripSeparator4;
         private ToolStripDropDownButton toolStripButton2;
@@ -693,5 +676,6 @@
         private ToolStripMenuItem exitToolStripMenuItem;
         private SaveFileDialog saveExportedFileDialog;
         private ToolStripButton toolStripButton3;
+        private ToolStripButton saveButton;
     }
 }
