@@ -585,7 +585,7 @@
             // 
             // saveExportedFileDialog
             // 
-            saveExportedFileDialog.Filter = "PNG File |*.png";
+            saveExportedFileDialog.Filter = "PNG|*.png|JPEG|*.jpg*.jpeg";
             // 
             // DeckViewForm
             // 

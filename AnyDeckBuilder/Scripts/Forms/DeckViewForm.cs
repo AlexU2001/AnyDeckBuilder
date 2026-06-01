@@ -309,7 +309,7 @@ namespace AnyDeckBuilder
                     using (var stream = new FileStream(saveExportedFileDialog.FileName, FileMode.Create))
                     {
                         ProjectFile.Current.ExportFilePath = saveExportedFileDialog.FileName;
-                        ExportFileToPath(ProjectFile.Current.ExportFilePath);
+                        ExportFileToPath(stream);
                     }
                 }
                 catch (Exception)
@@ -320,15 +320,16 @@ namespace AnyDeckBuilder
             }
         }
 
-        private Bitmap ExportFileToPath(string path)
+        private void ExportFileToPath(FileStream stream)
         {
             if (selectedDeck?.cards == null)
-                return new Bitmap(Properties.Resources.Black);
+                return;
 
             var cardSize = GetCardSize();
             var dimensions = GetExportDimensions();
             var imageSize = GetImageSize(cardSize, dimensions);
-            using (var canvas = new Bitmap(imageSize.Width, imageSize.Height, PixelFormat.Format32bppArgb))
+
+            using (var canvas = new Bitmap(imageSize.Width, imageSize.Height))
             {
                 Console.WriteLine($"Canvas Size: {canvas.Size}");
                 using (var gr = Graphics.FromImage(canvas))
@@ -347,9 +348,22 @@ namespace AnyDeckBuilder
                         Image image = Bitmap.FromFile(card.imagePath);
                         gr.DrawImage(image, rectangle);
                     }
-                    canvas.Save(path, ImageFormat.Png);
+                    var format = GetFormatFromFilterIndex(saveExportedFileDialog.FilterIndex);
+                    canvas.Save(stream, format);
                 }
-                return canvas;
+            }
+        }
+
+        private ImageFormat GetFormatFromFilterIndex(int index)
+        {
+            switch (index)
+            {
+                case 1:
+                    return ImageFormat.Png;
+                case 2:
+                    return ImageFormat.Jpeg;
+                default:
+                    throw new ArgumentException("Unable to determine file format");
             }
         }
 
