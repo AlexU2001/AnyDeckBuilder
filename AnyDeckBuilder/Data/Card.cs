@@ -1,4 +1,5 @@
-﻿namespace AnyDeckBuilder.Data
+﻿
+namespace AnyDeckBuilder.Data
 {
     public class Card : IEquatable<Card>
     {
@@ -8,6 +9,7 @@
         public string? imagePath;
         public bool isPathUrl;
         public CardProperty[]? properties;
+        public Size size;
 
         public bool Equals(Card? other)
         {

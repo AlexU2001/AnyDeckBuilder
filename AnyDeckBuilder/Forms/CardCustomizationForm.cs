@@ -53,6 +53,7 @@ namespace AnyDeckBuilder
                     {
                         var img = Bitmap.FromStream(str);
                         cardImage.Image = img;
+                        card.size = new Size(img.Width, img.Height);
                         card.imagePath = filePath;
                     }
                 }

@@ -181,29 +181,6 @@
         qgAAAABJRU5ErkJggg==
 </value>
   </data>
-  <data name="newFileButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAACcSURBVEhL7dUxDoQgEIVhzkbNYWzptuEShMKOs9Ds7k1W
-        C2g1oxhtRnirnUzyR2MYvlJxnJTShBZj7PN6eWghhDA556ry3mMIHaZFKWV1xph65AgMv5HNWrucUUph
-        CAp83l8MQQF6h5B/AIpBunztPihAzy2t9fKNysArX7sPCnBdBrg2uAFsDSjWgGIPA650CiA/fa5T4K5W
-        QIgZ15ziURxSP0UAAAAASUVORK5CYII=
-</value>
-  </data>
-  <data name="openToolStripButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAHYSURBVEhLrZS9SgNBFIXzBOIj+AKCLyD4CIKtgr2NtqbR
-        Uqu1jFgoWGihiIVEixAM+FMYLMRAkEQFI5qQxJifcpxvnLtsdpOwyebCYZOde8+5c8/MxgZFs9mcaTQa
-        rzztq/EFpO12u66heI5VRMjvch9qYulAJS6fjEir1Zq3KdGi0+ks0/lxJq9iC3sGVkSxZtPChyU8052n
-        BXQMIcSRRHSBQ5Eg915WyYdiFxad1OgiQsy8Z+PnLtEgkEtNKE9I/KzUjZkUT6+dqPjhfRdWdjMuObuR
-        pjQevWO1o3X07qYs/b/A9mm2V7EB4oh610vZI1Up3KpaKdeFn++i1NVdEV7IjJm3TTDoRf5bLamXi/W+
-        eLveMXl6fBuuAGOARAwU9NsZ3X89JwMopraMiM1zXAE6h0guFZ0LmV90EN5vEq5A1w4ARIgA/6jCoq8A
-        28Mgjh/j4i54C8PCK2A/kmkj4F0AzUY1cELCAIPh4TeHAa6eApjI/ygo59P9BaSTKGAK2of9gABe+JOH
-        BRcRLn3Z5gICLPoLhgUeYLJ7ikSAbRWuNgMFw4DLBqcez2pAYJzm1mq1SRGoy1jGaq6EFnB46f+ujAIm
-        QPfGXAm2wrXGFBajwjXXRCz2B+wY75ZaX12VAAAAAElFTkSuQmCC
-</value>
-  </data>
   <data name="printToolStripButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -280,11 +257,32 @@
         qgAAAABJRU5ErkJggg==
 </value>
   </data>
+  <data name="toolStripButton3.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAK9SURBVHhe7ZLBjdxQFMOm8/SUYtLOBFI+FnHCw9rUcQTw
+        9D5oCfDrk7/y8/V+G47mkl8/3m/LUV1C3/8uR3ENPXzC0TU05ilH2dB373JUf0IPDHHSCMu6a3wNHQ1x
+        0gDLumt8DR0NcdIAy7prfA0dDXHSAMu6a3wNHQ1x0gDLumt8DR0NcdIAy7prfA0dDXHSAMu6a3wNHQ1x
+        0gDLumt8DR0NcdIAy7prfA0dDXHSAMu6a3wNHQ1x0gDLumt8DR0NcdIAy7prfA0dDXHSAMu6a3wNHQ1x
+        0gDLumt8DR0NcdIAy7prfA0dDXHSAMu6a3wNHQ1x0gDLumt8DR0NcdIAy7prfA0dDXHSAMu6a3wNHQ1x
+        0gDLumt8DR0NcdIAy7prfA0dDXHSAMu6a3wNHQ1x0gDLumt8DR0NcdIAy7prfA0dDXHSAMu6a3wNHQ1x
+        0gDLumt8X6EHT4mPBliWPeP6L/TwLkfV0IinHGVD373D0Xzyyb+hX+8uR9XQ7/eUo2zou3c4mmvo4VPi
+        oxGWZc+4vkIPDHHSAMu6a3wNHQ1x0gDLumt8DR0NcdIAy7prfA0dDXHSAMu6a3wNHQ1x0gDLumt8DR0N
+        cdIAy7prfA0dDXHSAMu6a3wNHQ1x0gDLumt8DR0NcdIAy7prfA0dDXHSAMu6a3wNHQ1x0gDLumt8DR0N
+        cdIAy7prfA0dDXHSAMu6a3wNHQ1x0gDLumt8DR0NcdIAy7prfA0dDXHSAMu6a3wNHQ1x0gDLumt8DR0N
+        cdIAy7prfA0dDXHSAMu6a3wNHQ1x0gDLumt8DR0NcdIAy7prfA0dDXHSAMu6a3wNHQ1x0gDLumt8DR0N
+        cdIAy7prfA0dDXHSAMu6a3wNHQ1x0gDLumt8X6EHTzi6hkY85Sgb+u5djuoaeniHo7mExtzlqC6h73+X
+        o/jk9Xq9fgMMh58sbW8dygAAAABJRU5ErkJggg==
+</value>
+  </data>
   <metadata name="saveProjectDIalog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>307, 17</value>
   </metadata>
   <metadata name="openProjectDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>497, 17</value>
+  </metadata>
+  <metadata name="saveExportedFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>711, 17</value>
   </metadata>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>94</value>

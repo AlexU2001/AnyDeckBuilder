@@ -296,41 +296,105 @@ namespace AnyDeckBuilder
             if (selectedDeck == null || selectedDeck.cards == null)
                 return;
 
-            int count = selectedDeck.cards.Count;
-            int rows = (count / EXPORT_COLUMNS) + 1;
+            ExportAs();
+        }
 
-            var referenceCard = selectedDeck.cards[0];
-            for (int i = 1; i < count && referenceCard.imagePath == null; i++)
+        private void ExportAs()
+        {
+            saveExportedFileDialog.FileName = ProjectFile.Current.ExportName;
+            if (saveExportedFileDialog.ShowDialog() == DialogResult.OK)
             {
-                referenceCard = selectedDeck.cards[i];
+                try
+                {
+                    using (var stream = new FileStream(saveExportedFileDialog.FileName, FileMode.Create))
+                    {
+                        ProjectFile.Current.ExportFilePath = saveExportedFileDialog.FileName;
+                        ExportFileToPath(ProjectFile.Current.ExportFilePath);
+                    }
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
             }
-            Image referenceImage = Bitmap.FromFile(referenceCard.imagePath);
-            var refWidth = referenceImage.Width;
-            var refHeight = referenceImage.Height;
-            using (var canvas = new Bitmap(refWidth * EXPORT_COLUMNS, refHeight * rows, PixelFormat.Format32bppArgb))
+        }
+
+        private Bitmap ExportFileToPath(string path)
+        {
+            if (selectedDeck?.cards == null)
+                return new Bitmap(Properties.Resources.Black);
+
+            var cardSize = GetCardSize();
+            var dimensions = GetExportDimensions();
+            var imageSize = GetImageSize(cardSize, dimensions);
+            using (var canvas = new Bitmap(imageSize.Width, imageSize.Height, PixelFormat.Format32bppArgb))
             {
+                Console.WriteLine($"Canvas Size: {canvas.Size}");
                 using (var gr = Graphics.FromImage(canvas))
                 {
                     gr.Clear(Color.Black);
                     int index = 0;
-                    foreach (var currentCard in selectedDeck.cards)
+                    foreach (var card in selectedDeck.cards)
                     {
-                        if (currentCard.imagePath == null)
+                        if (card == null || card.imagePath == null)
                             continue;
 
-                        Image image = Bitmap.FromFile(currentCard.imagePath);
-                        int width = refWidth * index;
-                        int height = refHeight * (index / EXPORT_COLUMNS);
-                        var rectangle = new Rectangle(width, height, refWidth, refHeight);
+                        int x = cardSize.Width * index;
+                        int y = cardSize.Height * (index);
+                        var rectangle = new Rectangle(x, y, cardSize.Width, cardSize.Height);
                         Console.WriteLine($"Rectangle: {rectangle}");
+                        Image image = Bitmap.FromFile(card.imagePath);
                         gr.DrawImage(image, rectangle);
-                        string path = Path.Combine(Path.GetDirectoryName(ProjectFile.Current.FilePath), "TestExport.png");
-                        canvas.Save(path, ImageFormat.Png);
-
-                        index++;
                     }
+                    canvas.Save(path, ImageFormat.Png);
+                }
+                return canvas;
+            }
+        }
+
+        private Size GetExportDimensions()
+        {
+            var dimensions = ProjectFile.Current.exportSize;
+            if (ProjectFile.Current.autoExportSize && selectedDeck?.cards != null)
+            {
+                dimensions.Width = EXPORT_COLUMNS;
+                dimensions.Height = (selectedDeck.cards.Count / EXPORT_COLUMNS) + 1;
+            }
+            return dimensions;
+        }
+
+        private Size GetCardSize()
+        {
+            if (!ProjectFile.Current.autoCardSize)
+                return ProjectFile.Current.cardSize;
+
+            if (selectedDeck == null || selectedDeck.cards == null)
+                return ProjectFile.Current.cardSize;
+
+            foreach (var card in selectedDeck.cards)
+            {
+                if (card == null)
+                    continue;
+
+                if (card.size != default)
+                    return card.size;
+                else if (card.imagePath != null)
+                {
+                    Image referenceImage = Bitmap.FromFile(card.imagePath);
+                    return new Size(referenceImage.Width, referenceImage.Height);
                 }
             }
+            Console.WriteLine("Failed to get card size");
+            return new Size(100, 100);
+        }
+
+        private Size GetImageSize(Size cardSize, Size dimensions)
+        {
+            int columns = dimensions.Width;
+            int rows = dimensions.Height;
+            Console.WriteLine($"Card Size: {cardSize} Dimensions: {dimensions}");
+            return new Size(cardSize.Width * columns, cardSize.Height * rows);
         }
     }
 }
