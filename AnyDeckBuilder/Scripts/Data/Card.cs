@@ -28,10 +28,4 @@ namespace AnyDeckBuilder.Data
             return $"{id},{name},{description},{imagePath},{isPathUrl}";
         }
     }
-
-    public struct CardProperty
-    {
-        public string propertyName;
-        public string value;
-    }
 }

@@ -130,12 +130,14 @@
             // layoutPanel
             // 
             layoutPanel.AccessibleDescription = " ";
+            layoutPanel.AllowDrop = true;
             layoutPanel.BackColor = SystemColors.ControlDark;
             layoutPanel.Dock = DockStyle.Fill;
             layoutPanel.Location = new Point(0, 34);
             layoutPanel.Name = "layoutPanel";
             layoutPanel.Size = new Size(762, 909);
             layoutPanel.TabIndex = 3;
+            layoutPanel.DragEnter += LayoutPanel_DragEnter;
             // 
             // deckToolbar
             // 
@@ -610,7 +612,6 @@
             ResumeLayout(false);
             PerformLayout();
         }
-
 
         #endregion
 

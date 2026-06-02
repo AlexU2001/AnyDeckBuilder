@@ -415,5 +415,11 @@ namespace AnyDeckBuilder
         {
             Close();
         }
+
+        private void LayoutPanel_DragEnter(object sender, DragEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

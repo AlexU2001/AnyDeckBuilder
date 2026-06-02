@@ -41,13 +41,14 @@
             cancelButton = new Button();
             saveButton = new Button();
             addToCurrentDeckCheckBox = new CheckBox();
+            propertiesPanel = new Panel();
             ((System.ComponentModel.ISupportInitialize)cardImage).BeginInit();
             SuspendLayout();
             // 
             // cardImage
             // 
             cardImage.Image = Properties.Resources.ClickToSelectAnImage;
-            cardImage.Location = new Point(119, 64);
+            cardImage.Location = new Point(57, 64);
             cardImage.Name = "cardImage";
             cardImage.Size = new Size(326, 457);
             cardImage.SizeMode = PictureBoxSizeMode.Zoom;
@@ -63,16 +64,16 @@
             // 
             // nameTextBox
             // 
-            nameTextBox.Location = new Point(696, 93);
+            nameTextBox.Location = new Point(675, 93);
             nameTextBox.Name = "nameTextBox";
             nameTextBox.PlaceholderText = "New Card Name";
-            nameTextBox.Size = new Size(259, 31);
+            nameTextBox.Size = new Size(280, 31);
             nameTextBox.TabIndex = 3;
             // 
             // nameLabel
             // 
             nameLabel.AutoSize = true;
-            nameLabel.Location = new Point(631, 96);
+            nameLabel.Location = new Point(599, 96);
             nameLabel.Name = "nameLabel";
             nameLabel.Size = new Size(59, 25);
             nameLabel.TabIndex = 4;
@@ -81,16 +82,16 @@
             // cardPropertiesLabel
             // 
             cardPropertiesLabel.AutoSize = true;
-            cardPropertiesLabel.Location = new Point(622, 35);
+            cardPropertiesLabel.Location = new Point(389, 280);
             cardPropertiesLabel.Name = "cardPropertiesLabel";
-            cardPropertiesLabel.Size = new Size(174, 25);
+            cardPropertiesLabel.Size = new Size(159, 25);
             cardPropertiesLabel.TabIndex = 5;
-            cardPropertiesLabel.Text = "New Card Properties";
+            cardPropertiesLabel.Text = "Custom Properties";
             // 
             // descriptionLabel
             // 
             descriptionLabel.AutoSize = true;
-            descriptionLabel.Location = new Point(467, 143);
+            descriptionLabel.Location = new Point(388, 143);
             descriptionLabel.Name = "descriptionLabel";
             descriptionLabel.Size = new Size(102, 25);
             descriptionLabel.TabIndex = 4;
@@ -98,26 +99,26 @@
             // 
             // descriptionTextBox
             // 
-            descriptionTextBox.Location = new Point(570, 143);
+            descriptionTextBox.Location = new Point(491, 143);
             descriptionTextBox.Multiline = true;
             descriptionTextBox.Name = "descriptionTextBox";
             descriptionTextBox.PlaceholderText = "New Card Description";
-            descriptionTextBox.Size = new Size(385, 123);
+            descriptionTextBox.Size = new Size(464, 123);
             descriptionTextBox.TabIndex = 3;
             // 
             // idTextBox
             // 
-            idTextBox.Location = new Point(570, 96);
+            idTextBox.Location = new Point(491, 96);
             idTextBox.MinimumSize = new Size(40, 0);
             idTextBox.Name = "idTextBox";
             idTextBox.PlaceholderText = "#";
-            idTextBox.Size = new Size(46, 31);
+            idTextBox.Size = new Size(102, 31);
             idTextBox.TabIndex = 3;
             // 
             // idLabel
             // 
             idLabel.AutoSize = true;
-            idLabel.Location = new Point(525, 99);
+            idLabel.Location = new Point(446, 99);
             idLabel.Name = "idLabel";
             idLabel.Size = new Size(30, 25);
             idLabel.TabIndex = 4;
@@ -156,11 +157,19 @@
             addToCurrentDeckCheckBox.UseVisualStyleBackColor = true;
             addToCurrentDeckCheckBox.CheckedChanged += checkBox1_CheckedChanged;
             // 
+            // propertiesPanel
+            // 
+            propertiesPanel.Location = new Point(389, 329);
+            propertiesPanel.Name = "propertiesPanel";
+            propertiesPanel.Size = new Size(566, 192);
+            propertiesPanel.TabIndex = 8;
+            // 
             // CardCustomizationForm
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(967, 708);
+            Controls.Add(propertiesPanel);
             Controls.Add(addToCurrentDeckCheckBox);
             Controls.Add(saveButton);
             Controls.Add(cancelButton);
@@ -194,5 +203,6 @@
         private Button cancelButton;
         private Button saveButton;
         private CheckBox addToCurrentDeckCheckBox;
+        private Panel propertiesPanel;
     }
 }

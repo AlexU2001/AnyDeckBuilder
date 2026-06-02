@@ -24,6 +24,11 @@ namespace AnyDeckBuilder
             this.card = display.card;
             InitializeComponent();
             InitializeSettings();
+            LoadData();
+        }
+
+        private void LoadData()
+        {
             if (card.imagePath != null)
                 cardImage.Image = Bitmap.FromFile(card.imagePath);
             else
@@ -35,6 +40,16 @@ namespace AnyDeckBuilder
             idTextBox.Text = card.id;
             nameTextBox.Text = card.name;
             descriptionTextBox.Text = card.description;
+
+            if (card.properties == null)
+                return;
+
+            foreach (var property in card.properties)
+            {
+                PropertyControl prop = new PropertyControl(card, property);
+                prop.Name = property.Name;
+                propertiesPanel.Controls.Add(prop);
+            }
         }
 
         private void InitializeSettings()
