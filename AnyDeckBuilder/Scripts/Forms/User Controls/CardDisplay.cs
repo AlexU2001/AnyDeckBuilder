@@ -31,7 +31,6 @@ namespace AnyDeckBuilder
 
         private void CardDisplay_DragEnter(object? sender, DragEventArgs e)
         {
-            Console.WriteLine("Enter drag");
             if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Copy;
         }
 

@@ -138,6 +138,7 @@
             layoutPanel.Size = new Size(762, 909);
             layoutPanel.TabIndex = 3;
             layoutPanel.DragEnter += LayoutPanel_DragEnter;
+            layoutPanel.DragDrop += LayoutPanel_DragDrop;
             // 
             // deckToolbar
             // 

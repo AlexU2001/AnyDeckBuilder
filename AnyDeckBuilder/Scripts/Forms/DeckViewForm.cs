@@ -418,7 +418,20 @@ namespace AnyDeckBuilder
 
         private void LayoutPanel_DragEnter(object sender, DragEventArgs e)
         {
-            throw new NotImplementedException();
+            if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Copy;
+        }
+
+        private void LayoutPanel_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            foreach (var file in files)
+            {
+                Card card = new Card() { 
+                    name = Path.GetFileNameWithoutExtension(file), 
+                    imagePath = file,
+                };
+                AddCardDisplay(card);
+            }
         }
 
     }
