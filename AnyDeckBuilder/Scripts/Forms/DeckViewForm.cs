@@ -1,4 +1,5 @@
 using AnyDeckBuilder.Data;
+using AnyDeckBuilder.Scripts;
 using System.Drawing.Imaging;
 using System.Security;
 using System.Text;
@@ -127,8 +128,11 @@ namespace AnyDeckBuilder
                 if (deck.cards == null)
                     continue;
 
-                foreach (var card in deck.cards)
+                foreach (var cardGuid in deck.cards)
                 {
+                    if (!ProjectFile.Current.TryGetCard(cardGuid, out Card card))
+                        continue;
+
                     deckView.Nodes[i].Nodes.Add(card.name);
                 }
             }
@@ -142,8 +146,10 @@ namespace AnyDeckBuilder
             if (layoutPanel.Controls.Count > 0)
                 EmptyLayout();
 
-            foreach (var card in selectedDeck.cards)
+            foreach (var cardGuid in selectedDeck.cards)
             {
+                if (!ProjectFile.Current.TryGetCard(cardGuid, out Card card))
+                    continue;
                 AddCardDisplay(card);
             }
         }
@@ -163,6 +169,16 @@ namespace AnyDeckBuilder
             var display = new CardDisplay(card);
             display.Size = currentSize;
             layoutPanel.Controls.Add(display);
+        }
+
+        private void AddCardToDeck(Deck deck, Card card, bool addDisplay = false)
+        {
+            if (deck == null)
+                return;
+
+            deck.AddCard(card.guid);
+            if (addDisplay)
+                AddCardDisplay(card);
         }
         #endregion
         #region Panel1
@@ -208,8 +224,11 @@ namespace AnyDeckBuilder
         private void UpdateDeckView(object? sender, Card card)
         {
             if (!ProjectFile.Current.autoAddCardToCurrentDeck) return;
-            selectedDeck?.AddCard(card);
-            AddCardDisplay(card);
+
+            if (selectedDeck == null)
+                return;
+
+            AddCardToDeck(selectedDeck, card, true);
         }
 
         #region Zoom
@@ -301,14 +320,20 @@ namespace AnyDeckBuilder
 
         private void ExportAs()
         {
-            saveExportedFileDialog.FileName = ProjectFile.Current.ExportName;
+            if (selectedDeck == null || selectedDeck.cards == null)
+                return;
+
+            if (!string.IsNullOrEmpty(selectedDeck.exportPath))
+                saveExportedFileDialog.InitialDirectory = Path.GetDirectoryName(selectedDeck.exportPath);
+
+            saveExportedFileDialog.FileName = selectedDeck.exportName;
             if (saveExportedFileDialog.ShowDialog() == DialogResult.OK)
             {
                 try
                 {
                     using (var stream = new FileStream(saveExportedFileDialog.FileName, FileMode.Create))
                     {
-                        ProjectFile.Current.ExportFilePath = saveExportedFileDialog.FileName;
+                        selectedDeck.exportPath = saveExportedFileDialog.FileName;
                         ExportFileToPath(stream);
                     }
                 }
@@ -327,24 +352,27 @@ namespace AnyDeckBuilder
 
             var cardSize = GetCardSize();
             var dimensions = GetExportDimensions();
-            var imageSize = GetImageSize(cardSize, dimensions);
+            var canvasSize = GetCanvasSize(cardSize, dimensions);
 
-            using (var canvas = new Bitmap(imageSize.Width, imageSize.Height))
+            using (var canvas = new Bitmap(canvasSize.Width, canvasSize.Height))
             {
-                Console.WriteLine($"Canvas Size: {canvas.Size}");
+                //Console.WriteLine($"Canvas Size: {canvas.Size}");
                 using (var gr = Graphics.FromImage(canvas))
                 {
                     gr.Clear(Color.Black);
                     int index = 0;
-                    foreach (var card in selectedDeck.cards)
+                    foreach (var cardGuid in selectedDeck.cards)
                     {
-                        if (card == null || card.imagePath == null)
+                        if (!ProjectFile.Current.TryGetCard(cardGuid, out Card card))
+                            continue;
+
+                        if (card.imagePath == null)
                             continue;
 
                         int x = cardSize.Width * index;
-                        int y = cardSize.Height * (index);
+                        int y = cardSize.Height * index;
                         var rectangle = new Rectangle(x, y, cardSize.Width, cardSize.Height);
-                        Console.WriteLine($"Rectangle: {rectangle}");
+                        Console.WriteLine($"{card.name}'s Rectangle: {rectangle}");
                         Image image = Bitmap.FromFile(card.imagePath);
                         gr.DrawImage(image, rectangle);
                     }
@@ -380,20 +408,22 @@ namespace AnyDeckBuilder
 
         private Size GetCardSize()
         {
-            if (!ProjectFile.Current.autoCardSize)
-                return ProjectFile.Current.cardSize;
-
             if (selectedDeck == null || selectedDeck.cards == null)
                 return ProjectFile.Current.cardSize;
 
-            foreach (var card in selectedDeck.cards)
+            foreach (var cardGuid in selectedDeck.cards)
             {
-                if (card == null)
+                if (!ProjectFile.Current.TryGetCard(cardGuid, out Card card))
                     continue;
 
-                if (card.size != default)
-                    return card.size;
-                else if (card.imagePath != null)
+
+                if (Utility.TryGetCardTemplate(card.templateName, out var template))
+                {
+                    if (!template.dynamicSize)
+                        return template.size;
+                }
+                
+                if (card.imagePath != null)
                 {
                     Image referenceImage = Bitmap.FromFile(card.imagePath);
                     return new Size(referenceImage.Width, referenceImage.Height);
@@ -403,7 +433,7 @@ namespace AnyDeckBuilder
             return new Size(100, 100);
         }
 
-        private Size GetImageSize(Size cardSize, Size dimensions)
+        private Size GetCanvasSize(Size cardSize, Size dimensions)
         {
             int columns = dimensions.Width;
             int rows = dimensions.Height;
@@ -426,13 +456,45 @@ namespace AnyDeckBuilder
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
             foreach (var file in files)
             {
-                Card card = new Card() { 
-                    name = Path.GetFileNameWithoutExtension(file), 
+                Card card = new Card()
+                {
+                    name = Path.GetFileNameWithoutExtension(file),
                     imagePath = file,
                 };
-                AddCardDisplay(card);
+                AddCardToDeck(selectedDeck, card, true);
             }
         }
 
+        private void tTSDeckToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string script = string.Empty;
+        }
+
+        private string CreateLuaDeckFunction(Deck deck)
+        {
+            if (deck == null || deck.cards == null)
+                return string.Empty;
+
+            if (deck.exportPath == null)
+            {
+                // select a location for export
+            }
+
+            string deckParamTable = LuaScript.CreateTable("params",
+                $"face = {deck.exportPath}",
+                $"back = {deck.backImagePath}",
+                $"width = ",
+                $"height = ",
+                $"number = {deck.cards?.Count}",
+                $"back_is_hidden = ");
+            LuaScript script = new LuaScript();
+            script.AddFunctionHeader("spawnDeckObject")
+                .AddLine("type = DeckCustom, position = getPosition()")
+                .AddLine("callback_function = function(spawned_object")
+                .AddLine("")
+                .AddLine("end\n})")
+                ;
+            return script.CloseMethod();
+        }
     }
 }

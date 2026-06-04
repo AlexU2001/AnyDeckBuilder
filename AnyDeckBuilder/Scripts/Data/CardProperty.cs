@@ -1,27 +1,74 @@
-﻿namespace AnyDeckBuilder.Data
+﻿using Newtonsoft.Json;
+using System.Diagnostics.CodeAnalysis;
+
+namespace AnyDeckBuilder.Data
 {
-    public enum ControlType { Text, Number, DropDown }
-    public struct CardProperty
+    public enum ControlType { Text, Number, DropDown, DropDownMultiSelect }
+    public struct CardProperty : IEquatable<CardProperty>
     {
-        // Base Properties
+        /// <summary>
+        /// Display name of the card property
+        /// </summary>
         public string Name;
-        public string Value => Options[0];
         /// <summary>
         /// How the card property values should be interpreted
         /// </summary>
         public ControlType controlType;
-
-        // Drop Down Properties
-        public bool MultipleSelect;
         /// <summary>
-        /// Parallel array for Options
+        /// If multiple values can be accepted
         /// </summary>
-        public bool[] SelectedOptions;
-        public string[] Options;
-
-        public bool ShouldSerializeMultipleSelect()
+        public string[] Values;
+        [JsonIgnore]
+        public string Value => Values == null ? string.Empty : Values[0];
+        [JsonIgnore] public bool isValid => Values != null && Values.Length > 0;
+        public void SetValue(string value)
         {
-            return MultipleSelect;
+            if (Values == null || Values.Length > 1)
+                Values = new string[1];
+            Values[0] = value;
         }
+
+        #region Other
+        public bool Equals(CardProperty other)
+        {
+            if (Values.Length != other.Values.Length)
+                return false;
+
+            return Name.Equals(other.Name) && controlType.Equals(other.controlType);
+        }
+
+        public override bool Equals([NotNullWhen(true)] object? obj)
+        {
+            if (obj == null)
+                return false;
+
+            if (obj.GetType() == typeof(CardProperty))
+                return Equals((CardProperty)obj);
+            return base.Equals(obj);
+        }
+        public static bool operator ==(CardProperty left, CardProperty right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(CardProperty left, CardProperty right)
+        {
+            return !(left == right);
+        }
+
+        public override string ToString()
+        {
+            return $"Property Name: {Name} Control Type: {controlType}";
+        }
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Name, controlType, Values);
+        }
+
+        public void ClearValues()
+        {
+            Values = new string[0];
+        }
+        #endregion
     }
 }

@@ -41,14 +41,16 @@
             cancelButton = new Button();
             saveButton = new Button();
             addToCurrentDeckCheckBox = new CheckBox();
-            propertiesPanel = new Panel();
+            templateComboBox = new ComboBox();
+            templateLabel = new Label();
+            propertiesPanel = new FlowLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)cardImage).BeginInit();
             SuspendLayout();
             // 
             // cardImage
             // 
             cardImage.Image = Properties.Resources.ClickToSelectAnImage;
-            cardImage.Location = new Point(57, 64);
+            cardImage.Location = new Point(35, 93);
             cardImage.Name = "cardImage";
             cardImage.Size = new Size(326, 457);
             cardImage.SizeMode = PictureBoxSizeMode.Zoom;
@@ -68,7 +70,7 @@
             nameTextBox.Name = "nameTextBox";
             nameTextBox.PlaceholderText = "New Card Name";
             nameTextBox.Size = new Size(280, 31);
-            nameTextBox.TabIndex = 3;
+            nameTextBox.TabIndex = 2;
             // 
             // nameLabel
             // 
@@ -113,7 +115,7 @@
             idTextBox.Name = "idTextBox";
             idTextBox.PlaceholderText = "#";
             idTextBox.Size = new Size(102, 31);
-            idTextBox.TabIndex = 3;
+            idTextBox.TabIndex = 1;
             // 
             // idLabel
             // 
@@ -129,7 +131,7 @@
             cancelButton.Location = new Point(314, 616);
             cancelButton.Name = "cancelButton";
             cancelButton.Size = new Size(112, 34);
-            cancelButton.TabIndex = 6;
+            cancelButton.TabIndex = 4;
             cancelButton.Text = "Cancel";
             cancelButton.UseVisualStyleBackColor = true;
             cancelButton.Click += cancelButton_Click;
@@ -139,7 +141,7 @@
             saveButton.Location = new Point(467, 616);
             saveButton.Name = "saveButton";
             saveButton.Size = new Size(202, 34);
-            saveButton.TabIndex = 6;
+            saveButton.TabIndex = 5;
             saveButton.Text = "Save";
             saveButton.UseVisualStyleBackColor = true;
             saveButton.Click += saveButton_Click;
@@ -152,17 +154,36 @@
             addToCurrentDeckCheckBox.Location = new Point(467, 667);
             addToCurrentDeckCheckBox.Name = "addToCurrentDeckCheckBox";
             addToCurrentDeckCheckBox.Size = new Size(202, 29);
-            addToCurrentDeckCheckBox.TabIndex = 7;
+            addToCurrentDeckCheckBox.TabIndex = 6;
             addToCurrentDeckCheckBox.Text = "Add To Current Deck";
             addToCurrentDeckCheckBox.UseVisualStyleBackColor = true;
             addToCurrentDeckCheckBox.CheckedChanged += checkBox1_CheckedChanged;
             // 
+            // templateComboBox
+            // 
+            templateComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            templateComboBox.FormattingEnabled = true;
+            templateComboBox.Location = new Point(613, 41);
+            templateComboBox.Name = "templateComboBox";
+            templateComboBox.Size = new Size(182, 33);
+            templateComboBox.TabIndex = 0;
+            templateComboBox.SelectedIndexChanged += templateComboBox_SelectedIndexChanged;
+            // 
+            // templateLabel
+            // 
+            templateLabel.AutoSize = true;
+            templateLabel.Location = new Point(524, 44);
+            templateLabel.Name = "templateLabel";
+            templateLabel.Size = new Size(83, 25);
+            templateLabel.TabIndex = 10;
+            templateLabel.Text = "Template";
+            // 
             // propertiesPanel
             // 
-            propertiesPanel.Location = new Point(389, 329);
+            propertiesPanel.Location = new Point(400, 325);
             propertiesPanel.Name = "propertiesPanel";
-            propertiesPanel.Size = new Size(566, 192);
-            propertiesPanel.TabIndex = 8;
+            propertiesPanel.Size = new Size(526, 269);
+            propertiesPanel.TabIndex = 11;
             // 
             // CardCustomizationForm
             // 
@@ -170,6 +191,8 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(967, 708);
             Controls.Add(propertiesPanel);
+            Controls.Add(templateLabel);
+            Controls.Add(templateComboBox);
             Controls.Add(addToCurrentDeckCheckBox);
             Controls.Add(saveButton);
             Controls.Add(cancelButton);
@@ -203,6 +226,8 @@
         private Button cancelButton;
         private Button saveButton;
         private CheckBox addToCurrentDeckCheckBox;
-        private Panel propertiesPanel;
+        private ComboBox templateComboBox;
+        private Label templateLabel;
+        private FlowLayoutPanel propertiesPanel;
     }
 }

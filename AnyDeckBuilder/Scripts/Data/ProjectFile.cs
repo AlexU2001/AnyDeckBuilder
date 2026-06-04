@@ -1,4 +1,7 @@
-﻿namespace AnyDeckBuilder.Data
+﻿
+using Newtonsoft.Json;
+
+namespace AnyDeckBuilder.Data
 {
     public class ProjectFile
     {
@@ -6,13 +9,11 @@
         private static ProjectFile m_current = new ProjectFile();
         #region Save Data
         public List<Deck> decks = new List<Deck>();
-        public List<Card> cards = new List<Card>();
+        public Dictionary<string, Card> cardsDict = new Dictionary<string, Card>();
 
+        [JsonIgnore]
         public string Name => FilePath == null || FilePath.Length == 0 ? "New Project" : Path.GetFileName(FilePath);
         public string FilePath = string.Empty;
-
-        public string ExportName => ExportFilePath == null || ExportFilePath.Length == 0 ? "New Project" : Path.GetFileName(FilePath);
-        public string ExportFilePath = string.Empty;
 
         /// <summary>
         /// The size of all the cards in the deck. If auto card size is true, this value is ignored.
@@ -38,8 +39,8 @@
         public ProjectFile()
         {
             autoAddCardToCurrentDeck = true;
-            decks = new List<Deck>();
-            cards = new List<Card>();
+            decks = new();
+            cardsDict = new();
         }
 
         public void AddDeck(Deck deck)
@@ -49,8 +50,8 @@
 
         public void AddCard(Card card)
         {
-            Console.WriteLine("Added card");
-            cards.Add(card);
+            Console.WriteLine($"Added card {card.name} : {card.guid}");
+            cardsDict.Add(card.guid, card);
         }
 
         public string ToJSON()
@@ -61,6 +62,13 @@
         public static void SetCurrent(ProjectFile file)
         {
             m_current = file;
+        }
+
+        public bool TryGetCard(string cardGuid, out Card card)
+        {
+            if (cardsDict.TryGetValue(cardGuid, out card))
+                return true;
+            return false;
         }
     }
 }

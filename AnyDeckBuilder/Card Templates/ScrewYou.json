@@ -1,0 +1,46 @@
+{
+    "name": "Screw You",
+    "size": "540,810",
+    "dynamicSize": false,
+    "properties": [
+        {
+            "Name": "Card Type",
+            "controlType": 2,
+            "Values": [
+                "Red",
+                "Green",
+                "Defense",
+                "Blue",
+                "Pink",
+                "Orange",
+                "Power"
+            ]
+        },
+        {
+            "Name": "Tags",
+            "controlType": 3,
+            "Values": [
+                "Free",
+                "Trap",
+                "Concealed",
+                "Reactive",
+                "Hot",
+                "Growing",
+                "Replayable"
+            ]
+        },
+        {
+            "Name": "Status Effects",
+            "controlType": 3,
+            "Values": [
+                "Infected",
+                "Burnt",
+                "Stunned",
+                "Confused",
+                "Blessed",
+                "Love Bombing",
+                "Double or Nothing"
+            ]
+        }
+    ]
+}
