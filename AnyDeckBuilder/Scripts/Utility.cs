@@ -40,6 +40,9 @@ namespace AnyDeckBuilder
         public static bool TryGetCardTemplate(string name, out CardTemplate? template)
         {
             template = null;
+            if (string.IsNullOrEmpty(name))
+                return false;
+
             if (m_cardTemplatesDict.TryGetValue(name, out template))
                 return true;
             return false;

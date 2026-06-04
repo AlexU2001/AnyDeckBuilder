@@ -5,6 +5,7 @@ namespace AnyDeckBuilder.Data
 {
     public class ProjectFile
     {
+        public static bool isNull => m_current == null;
         public static ProjectFile Current => m_current;
         private static ProjectFile m_current = new ProjectFile();
         #region Save Data
@@ -45,11 +46,22 @@ namespace AnyDeckBuilder.Data
 
         public void AddDeck(Deck deck)
         {
+            if (deck == null)
+            {
+                Console.WriteLine("Cannot add a null deck");
+                return;
+            }
+
+            if (decks == null)
+                decks = new();
+
             decks.Add(deck);
         }
 
         public void AddCard(Card card)
         {
+            if (cardsDict == null)
+                cardsDict = new();
             Console.WriteLine($"Added card {card.name} : {card.guid}");
             cardsDict.Add(card.guid, card);
         }

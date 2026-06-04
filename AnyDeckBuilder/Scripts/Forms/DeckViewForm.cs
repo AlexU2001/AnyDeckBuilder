@@ -103,7 +103,7 @@ namespace AnyDeckBuilder
         }
         private void LoadProjectData()
         {
-            if (ProjectFile.Current.decks.Count <= 0)
+            if (ProjectFile.isNull || ProjectFile.Current.decks.Count == 0)
             {
                 selectedDeck = new Deck("Untitled Deck");
                 ProjectFile.Current.AddDeck(selectedDeck);
@@ -175,6 +175,9 @@ namespace AnyDeckBuilder
         {
             if (deck == null)
                 return;
+
+            if (!ProjectFile.Current.cardsDict.ContainsKey(card.guid))
+                ProjectFile.Current.AddCard(card);
 
             deck.AddCard(card.guid);
             if (addDisplay)
@@ -308,6 +311,24 @@ namespace AnyDeckBuilder
         {
             new CardCustomizationForm().ShowDialog();
         }
+        private void LayoutPanel_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Copy;
+        }
+
+        private void LayoutPanel_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            foreach (var file in files)
+            {
+                Card card = new Card()
+                {
+                    name = Path.GetFileNameWithoutExtension(file),
+                    imagePath = file,
+                };
+                AddCardToDeck(selectedDeck, card, true);
+            }
+        }
         #endregion
 
         private void exportToolStripMenuItem_Click(object sender, EventArgs e)
@@ -369,12 +390,13 @@ namespace AnyDeckBuilder
                         if (card.imagePath == null)
                             continue;
 
-                        int x = cardSize.Width * index;
-                        int y = cardSize.Height * index;
+                        int x = cardSize.Width * (index % dimensions.Width);
+                        int y = cardSize.Height * (index / dimensions.Width);
                         var rectangle = new Rectangle(x, y, cardSize.Width, cardSize.Height);
                         Console.WriteLine($"{card.name}'s Rectangle: {rectangle}");
                         Image image = Bitmap.FromFile(card.imagePath);
                         gr.DrawImage(image, rectangle);
+                        index++;
                     }
                     var format = GetFormatFromFilterIndex(saveExportedFileDialog.FilterIndex);
                     canvas.Save(stream, format);
@@ -409,7 +431,10 @@ namespace AnyDeckBuilder
         private Size GetCardSize()
         {
             if (selectedDeck == null || selectedDeck.cards == null)
+            {
+                Console.WriteLine("Exiting, null deck or empty cards list");
                 return ProjectFile.Current.cardSize;
+            }
 
             foreach (var cardGuid in selectedDeck.cards)
             {
@@ -422,7 +447,7 @@ namespace AnyDeckBuilder
                     if (!template.dynamicSize)
                         return template.size;
                 }
-                
+
                 if (card.imagePath != null)
                 {
                     Image referenceImage = Bitmap.FromFile(card.imagePath);
@@ -444,25 +469,6 @@ namespace AnyDeckBuilder
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Close();
-        }
-
-        private void LayoutPanel_DragEnter(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Copy;
-        }
-
-        private void LayoutPanel_DragDrop(object sender, DragEventArgs e)
-        {
-            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-            foreach (var file in files)
-            {
-                Card card = new Card()
-                {
-                    name = Path.GetFileNameWithoutExtension(file),
-                    imagePath = file,
-                };
-                AddCardToDeck(selectedDeck, card, true);
-            }
         }
 
         private void tTSDeckToolStripMenuItem_Click(object sender, EventArgs e)
