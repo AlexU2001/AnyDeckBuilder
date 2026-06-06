@@ -419,12 +419,17 @@ namespace AnyDeckBuilder
 
         private Size GetExportDimensions()
         {
-            var dimensions = ProjectFile.Current.exportSize;
-            if (ProjectFile.Current.autoExportSize && selectedDeck?.cards != null)
+            if (selectedDeck == null)
+                return ProjectFile.Current.exportDimensions;
+
+            var dimensions = ProjectFile.Current.exportDimensions;
+            if (ProjectFile.Current.autoExportSize && selectedDeck.cards != null)
             {
                 dimensions.Width = EXPORT_COLUMNS;
                 dimensions.Height = (selectedDeck.cards.Count / EXPORT_COLUMNS) + 1;
             }
+            selectedDeck.exportX = dimensions.Width;
+            selectedDeck.exportY = dimensions.Height;
             return dimensions;
         }
 
@@ -473,7 +478,15 @@ namespace AnyDeckBuilder
 
         private void tTSDeckToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string script = string.Empty;
+            if (selectedDeck == null)
+                return;
+
+            string script = CreateLuaDeckFunction(selectedDeck);
+            if (script == null)
+                return;
+
+            Clipboard.SetText(script);
+            Console.WriteLine($"Copied Lua Script: \n {script}");
         }
 
         private string CreateLuaDeckFunction(Deck deck)
@@ -481,26 +494,56 @@ namespace AnyDeckBuilder
             if (deck == null || deck.cards == null)
                 return string.Empty;
 
+            if (deck.exportX == 0)
+                return string.Empty;
+
             if (deck.exportPath == null)
             {
-                // select a location for export
+                // start the export process for this deck
             }
 
-            string deckParamTable = LuaScript.CreateTable("params",
+
+            LuaScript script = new LuaScript();
+            string table = LuaScript.CreateTable("params", true,
+                $"click_function = click_func",
+                $"back = self",
+                $"label = Spawn Deck",
+                "position = {0,1,0}",
+                "width = 800",
+                "height = 400",
+                "font_size = 340",
+                "color = {0.5,0.5,0.5}",
+                "font_color = {1,1,1}",
+                $"tooltip = Spawns a deck, assigns metadata and then deletes this object.");
+
+            script.AddFunctionHeader("onLoad")
+                .AddLine(table)
+                .AddLine("self.createButton(params)")
+                .CloseMethod();
+
+            script.AddFunctionHeader("click_func", "obj", "color", "alt_click").
+                AddLine("spawnDeckObject()")
+                .CloseMethod();
+
+            table = LuaScript.CreateTable("params", true,
                 $"face = {deck.exportPath}",
                 $"back = {deck.backImagePath}",
-                $"width = ",
-                $"height = ",
+                $"width = {deck.exportX}",
+                $"height = {deck.exportY}",
                 $"number = {deck.cards?.Count}",
-                $"back_is_hidden = ");
-            LuaScript script = new LuaScript();
+                $"sideways = false",
+                $"back_is_hidden = true");
+
             script.AddFunctionHeader("spawnDeckObject")
-                .AddLine("type = DeckCustom, position = getPosition()")
-                .AddLine("callback_function = function(spawned_object")
-                .AddLine("")
+                .AddLine("local object = spawnObject({")
+                .AddLine("type = DeckCustom, position = getPosition(),")
+                .AddLine("callback_function = function(spawned_object)")
+                .AddLine(table)
+                .AddLine("spawned_object.setCustomObject(params)")
                 .AddLine("end\n})")
-                ;
-            return script.CloseMethod();
+                .CloseMethod();
+            ;
+            return script.GetScript();
         }
     }
 }

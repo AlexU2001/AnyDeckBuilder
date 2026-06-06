@@ -15,6 +15,8 @@ namespace AnyDeckBuilder.Data
         /// The path this deck was last exported to
         /// </summary>
         public string? exportPath;
+        public int exportX;
+        public int exportY;
         public string? backImagePath;
         public string? defaultTemplate;
 

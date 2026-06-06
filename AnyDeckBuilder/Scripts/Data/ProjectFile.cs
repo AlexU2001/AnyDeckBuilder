@@ -23,7 +23,7 @@ namespace AnyDeckBuilder.Data
         /// <summary>
         /// X corresponds to the columns and Y to the rows. If auto export size is true, this value is ignored
         /// </summary>
-        public Size exportSize;
+        public Size exportDimensions = new Size(10, 7);
         #endregion
 
         #region Preferences
