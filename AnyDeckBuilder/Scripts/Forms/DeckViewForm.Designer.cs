@@ -128,7 +128,7 @@
             deckView.Name = "deckView";
             deckView.Size = new Size(381, 943);
             deckView.TabIndex = 0;
-            deckView.AfterSelect += deckView_AfterSelect;
+            deckView.NodeMouseDoubleClick += DeckView_NodeMouseDoubleClick;
             // 
             // layoutPanel
             // 

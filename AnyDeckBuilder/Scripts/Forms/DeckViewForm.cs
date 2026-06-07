@@ -9,6 +9,7 @@ namespace AnyDeckBuilder
     public partial class DeckViewForm : Form
     {
         private const int EXPORT_COLUMNS = 10;
+        private const string TTS_SCRIPT_TEMPLATE = "Resources/TabletopSimulatorScriptTemplate.lua";
         public Deck? selectedDeck;
         public DeckViewForm()
         {
@@ -138,15 +139,15 @@ namespace AnyDeckBuilder
             }
         }
 
-        private void LoadDeck(Deck selectedDeck)
+        private void LoadDeck(Deck deck)
         {
-            if (selectedDeck == null)
+            if (deck == null)
                 return;
 
             if (layoutPanel.Controls.Count > 0)
                 EmptyLayout();
 
-            foreach (var cardGuid in selectedDeck.cards)
+            foreach (var cardGuid in deck.cards)
             {
                 if (!ProjectFile.Current.TryGetCard(cardGuid, out Card card))
                     continue;
@@ -185,7 +186,7 @@ namespace AnyDeckBuilder
         }
         #endregion
         #region Panel1
-        private void deckView_AfterSelect(object sender, TreeViewEventArgs e)
+        private void DeckView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (e.Node?.Parent == null)
             {
@@ -197,7 +198,11 @@ namespace AnyDeckBuilder
             {
                 if (deck.name == e.Node?.Name)
                 {
+                    if (deck == selectedDeck)
+                        return;
+
                     selectedDeck = deck;
+                    LoadDeck(deck);
                     return;
                 }
             }
@@ -481,69 +486,12 @@ namespace AnyDeckBuilder
             if (selectedDeck == null)
                 return;
 
-            string script = CreateLuaDeckFunction(selectedDeck);
+            string script = File.ReadAllText(TTS_SCRIPT_TEMPLATE);
             if (script == null)
                 return;
 
             Clipboard.SetText(script);
             Console.WriteLine($"Copied Lua Script: \n {script}");
-        }
-
-        private string CreateLuaDeckFunction(Deck deck)
-        {
-            if (deck == null || deck.cards == null)
-                return string.Empty;
-
-            if (deck.exportX == 0)
-                return string.Empty;
-
-            if (deck.exportPath == null)
-            {
-                // start the export process for this deck
-            }
-
-
-            LuaScript script = new LuaScript();
-            string table = LuaScript.CreateTable("params", true,
-                $"click_function = click_func",
-                $"back = self",
-                $"label = Spawn Deck",
-                "position = {0,1,0}",
-                "width = 800",
-                "height = 400",
-                "font_size = 340",
-                "color = {0.5,0.5,0.5}",
-                "font_color = {1,1,1}",
-                $"tooltip = Spawns a deck, assigns metadata and then deletes this object.");
-
-            script.AddFunctionHeader("onLoad")
-                .AddLine(table)
-                .AddLine("self.createButton(params)")
-                .CloseMethod();
-
-            script.AddFunctionHeader("click_func", "obj", "color", "alt_click").
-                AddLine("spawnDeckObject()")
-                .CloseMethod();
-
-            table = LuaScript.CreateTable("params", true,
-                $"face = {deck.exportPath}",
-                $"back = {deck.backImagePath}",
-                $"width = {deck.exportX}",
-                $"height = {deck.exportY}",
-                $"number = {deck.cards?.Count}",
-                $"sideways = false",
-                $"back_is_hidden = true");
-
-            script.AddFunctionHeader("spawnDeckObject")
-                .AddLine("local object = spawnObject({")
-                .AddLine("type = DeckCustom, position = getPosition(),")
-                .AddLine("callback_function = function(spawned_object)")
-                .AddLine(table)
-                .AddLine("spawned_object.setCustomObject(params)")
-                .AddLine("end\n})")
-                .CloseMethod();
-            ;
-            return script.GetScript();
         }
     }
 }
