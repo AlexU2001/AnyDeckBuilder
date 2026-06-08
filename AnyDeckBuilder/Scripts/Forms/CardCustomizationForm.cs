@@ -60,7 +60,6 @@ namespace AnyDeckBuilder
             }
 
             isEditing = true;
-            idTextBox.Text = card.id;
             nameTextBox.Text = card.name;
             descriptionTextBox.Text = card.description;
 
@@ -170,7 +169,6 @@ namespace AnyDeckBuilder
         private void SaveCard(ref Card card)
         {
             card.name = $"{nameTextBox.Text}";
-            card.id = $"{idTextBox.Text}";
             card.description = $"{descriptionTextBox.Text}";
             if (display != null)
                 display.SetCard(card);

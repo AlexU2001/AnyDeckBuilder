@@ -4,6 +4,20 @@
     "dynamicSize": false,
     "properties": [
         {
+            "Name": "Card ID",
+            "controlType": 0,
+            "Values": [
+                "Red",
+                "Green",
+                "Defense",
+                "Blue",
+                "Pink",
+                "Orange",
+                "Power"
+            ],
+            "propertyAsTag": false
+        },
+        {
             "Name": "Card Type",
             "controlType": 2,
             "Values": [
@@ -14,7 +28,8 @@
                 "Pink",
                 "Orange",
                 "Power"
-            ]
+            ],
+            "propertyAsTag": true
         },
         {
             "Name": "Tags",
@@ -27,7 +42,8 @@
                 "Hot",
                 "Growing",
                 "Replayable"
-            ]
+            ],
+            "propertyAsTag": true
         },
         {
             "Name": "Status Effects",
@@ -40,7 +56,8 @@
                 "Blessed",
                 "Love Bombing",
                 "Double or Nothing"
-            ]
+            ],
+            "propertyAsTag": true
         }
     ]
 }

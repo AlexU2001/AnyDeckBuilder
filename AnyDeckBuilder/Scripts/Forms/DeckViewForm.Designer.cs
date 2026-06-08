@@ -81,6 +81,8 @@
             saveAsToolStripMenuItem1 = new ToolStripMenuItem();
             exportToolStripMenuItem = new ToolStripMenuItem();
             exportAsToolStripMenuItem = new ToolStripMenuItem();
+            tTSDeckToolStripMenuItem = new ToolStripMenuItem();
+            deckAsjsonToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             printToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator6 = new ToolStripSeparator();
@@ -93,8 +95,6 @@
             saveProjectDIalog = new SaveFileDialog();
             openProjectDialog = new OpenFileDialog();
             saveExportedFileDialog = new SaveFileDialog();
-            tTSDeckToolStripMenuItem = new ToolStripMenuItem();
-            deckAsjsonToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -518,6 +518,19 @@
             exportAsToolStripMenuItem.Size = new Size(308, 34);
             exportAsToolStripMenuItem.Text = "Export As";
             // 
+            // tTSDeckToolStripMenuItem
+            // 
+            tTSDeckToolStripMenuItem.Name = "tTSDeckToolStripMenuItem";
+            tTSDeckToolStripMenuItem.Size = new Size(217, 34);
+            tTSDeckToolStripMenuItem.Text = "TTS Deck";
+            tTSDeckToolStripMenuItem.Click += tTSDeckToolStripMenuItem_Click;
+            // 
+            // deckAsjsonToolStripMenuItem
+            // 
+            deckAsjsonToolStripMenuItem.Name = "deckAsjsonToolStripMenuItem";
+            deckAsjsonToolStripMenuItem.Size = new Size(217, 34);
+            deckAsjsonToolStripMenuItem.Text = "Deck as .json";
+            // 
             // toolStripSeparator5
             // 
             toolStripSeparator5.Name = "toolStripSeparator5";
@@ -599,19 +612,6 @@
             // saveExportedFileDialog
             // 
             saveExportedFileDialog.Filter = "PNG|*.png|JPEG|*.jpg*.jpeg";
-            // 
-            // tTSDeckToolStripMenuItem
-            // 
-            tTSDeckToolStripMenuItem.Name = "tTSDeckToolStripMenuItem";
-            tTSDeckToolStripMenuItem.Size = new Size(270, 34);
-            tTSDeckToolStripMenuItem.Text = "TTS Deck";
-            tTSDeckToolStripMenuItem.Click += tTSDeckToolStripMenuItem_Click;
-            // 
-            // deckAsjsonToolStripMenuItem
-            // 
-            deckAsjsonToolStripMenuItem.Name = "deckAsjsonToolStripMenuItem";
-            deckAsjsonToolStripMenuItem.Size = new Size(270, 34);
-            deckAsjsonToolStripMenuItem.Text = "Deck as .json";
             // 
             // DeckViewForm
             // 

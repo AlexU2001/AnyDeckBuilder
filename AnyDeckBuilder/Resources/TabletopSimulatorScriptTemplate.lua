@@ -1,4 +1,7 @@
-jsonString = [[]]
+jsonString = [[PROJECT_FILE_JSON]]
+-- Settings
+DECK_DISPLACEMENT_X = 3.1
+-- Run Time Variables
 data = nil
 
 function onLoad()
@@ -24,7 +27,7 @@ function spawnDecks()
     GetData() 
   end
   for index, value in ipairs(data["decks"]) do
-    spawnDeckObject(value, self.getPosition() + Vector(5, 0, 0) * index)
+    spawnDeckObject(value, self.getPosition() + Vector(DECK_DISPLACEMENT_X, 0, 0) * index)
   end
 end
 
@@ -51,6 +54,7 @@ function spawnDeckObject(deckData, position)
                 back_is_hidden = true
             }
             spawned_object.setCustomObject(params)
+            outputPosition = position
             TrySetData(spawned_object)
         end
     })
@@ -78,9 +82,11 @@ function SetData(cardObj, index)
 
     cardObj.setName(cardData["name"])
     cardObj.setDescription(cardData["description"])
-    cardObj.setTags(GetTags(cardData))
+    local tags = GetTagsFromCardData(cardData) 
+    if tags != nil then
+      cardObj.setTags(tags)
+    end
     cardObj.setPosition(Vector(outputPosition) + Vector(0, index * 0.1, 0))
-    -- do tags now
 end
 
 function GetCardDataFromGUID(guid)
@@ -95,4 +101,5 @@ function GetTagsFromCardData(cardData)
   if cardData["properties"] == nil then
     return nil
   end
+
 end

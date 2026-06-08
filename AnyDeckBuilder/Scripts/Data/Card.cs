@@ -7,7 +7,6 @@ namespace AnyDeckBuilder.Data
         /// Unique ID generated when a card is created
         /// </summary>
         public string guid { get; private set; }
-        public string? id;
         public string? name;
         public string? description;
         public string? imagePath;
@@ -26,7 +25,7 @@ namespace AnyDeckBuilder.Data
             if (other == null)
                 return false;
 
-            return id == other.id;
+            return guid == other.guid;
         }
 
         public string ToJSON()
@@ -35,7 +34,7 @@ namespace AnyDeckBuilder.Data
         }
         public override string ToString()
         {
-            return $"{id},{name},{description},{imagePath},{isPathUrl}";
+            return $"{guid},{name},{description},{imagePath},{isPathUrl}";
         }
     }
 }

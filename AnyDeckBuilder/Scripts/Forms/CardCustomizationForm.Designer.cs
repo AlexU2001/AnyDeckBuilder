@@ -36,8 +36,6 @@
             cardPropertiesLabel = new Label();
             descriptionLabel = new Label();
             descriptionTextBox = new TextBox();
-            idTextBox = new TextBox();
-            idLabel = new Label();
             cancelButton = new Button();
             saveButton = new Button();
             addToCurrentDeckCheckBox = new CheckBox();
@@ -66,16 +64,16 @@
             // 
             // nameTextBox
             // 
-            nameTextBox.Location = new Point(675, 93);
+            nameTextBox.Location = new Point(491, 93);
             nameTextBox.Name = "nameTextBox";
             nameTextBox.PlaceholderText = "New Card Name";
-            nameTextBox.Size = new Size(280, 31);
+            nameTextBox.Size = new Size(464, 31);
             nameTextBox.TabIndex = 2;
             // 
             // nameLabel
             // 
             nameLabel.AutoSize = true;
-            nameLabel.Location = new Point(599, 96);
+            nameLabel.Location = new Point(426, 93);
             nameLabel.Name = "nameLabel";
             nameLabel.Size = new Size(59, 25);
             nameLabel.TabIndex = 4;
@@ -84,7 +82,7 @@
             // cardPropertiesLabel
             // 
             cardPropertiesLabel.AutoSize = true;
-            cardPropertiesLabel.Location = new Point(389, 280);
+            cardPropertiesLabel.Location = new Point(388, 287);
             cardPropertiesLabel.Name = "cardPropertiesLabel";
             cardPropertiesLabel.Size = new Size(159, 25);
             cardPropertiesLabel.TabIndex = 5;
@@ -108,26 +106,9 @@
             descriptionTextBox.Size = new Size(464, 123);
             descriptionTextBox.TabIndex = 3;
             // 
-            // idTextBox
-            // 
-            idTextBox.Location = new Point(491, 96);
-            idTextBox.MinimumSize = new Size(40, 0);
-            idTextBox.Name = "idTextBox";
-            idTextBox.PlaceholderText = "#";
-            idTextBox.Size = new Size(102, 31);
-            idTextBox.TabIndex = 1;
-            // 
-            // idLabel
-            // 
-            idLabel.AutoSize = true;
-            idLabel.Location = new Point(446, 99);
-            idLabel.Name = "idLabel";
-            idLabel.Size = new Size(30, 25);
-            idLabel.TabIndex = 4;
-            idLabel.Text = "ID";
-            // 
             // cancelButton
             // 
+            cancelButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             cancelButton.Location = new Point(314, 616);
             cancelButton.Name = "cancelButton";
             cancelButton.Size = new Size(112, 34);
@@ -138,6 +119,7 @@
             // 
             // saveButton
             // 
+            saveButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             saveButton.Location = new Point(467, 616);
             saveButton.Name = "saveButton";
             saveButton.Size = new Size(202, 34);
@@ -148,6 +130,7 @@
             // 
             // addToCurrentDeckCheckBox
             // 
+            addToCurrentDeckCheckBox.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             addToCurrentDeckCheckBox.AutoSize = true;
             addToCurrentDeckCheckBox.Checked = true;
             addToCurrentDeckCheckBox.CheckState = CheckState.Checked;
@@ -180,9 +163,11 @@
             // 
             // propertiesPanel
             // 
-            propertiesPanel.Location = new Point(400, 325);
+            propertiesPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            propertiesPanel.BackColor = Color.Transparent;
+            propertiesPanel.Location = new Point(388, 325);
             propertiesPanel.Name = "propertiesPanel";
-            propertiesPanel.Size = new Size(526, 269);
+            propertiesPanel.Size = new Size(567, 269);
             propertiesPanel.TabIndex = 11;
             // 
             // CardCustomizationForm
@@ -199,10 +184,8 @@
             Controls.Add(cardImage);
             Controls.Add(cardPropertiesLabel);
             Controls.Add(descriptionLabel);
-            Controls.Add(idLabel);
             Controls.Add(nameLabel);
             Controls.Add(descriptionTextBox);
-            Controls.Add(idTextBox);
             Controls.Add(nameTextBox);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "CardCustomizationForm";
@@ -221,8 +204,6 @@
         private Label cardPropertiesLabel;
         private Label descriptionLabel;
         private TextBox descriptionTextBox;
-        private TextBox idTextBox;
-        private Label idLabel;
         private Button cancelButton;
         private Button saveButton;
         private CheckBox addToCurrentDeckCheckBox;
