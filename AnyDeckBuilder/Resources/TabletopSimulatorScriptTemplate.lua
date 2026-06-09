@@ -1,4 +1,3 @@
-jsonString = [[PROJECT_FILE_JSON]]
 -- Settings
 DECK_DISPLACEMENT_X = 3.1
 -- Run Time Variables
@@ -102,4 +101,16 @@ function GetTagsFromCardData(cardData)
     return nil
   end
 
+  local tags = {}
+  local nextIndex = 1
+  for index, property in ipairs(cardData["properties"]) do
+    if property["propertyAsTag"] == true then
+        for j, value in ipairs(property["Values"]) do
+            tags[nextIndex] = value
+            nextIndex = nextIndex + 1
+        end
+    end
+  end
+
+  return tags
 end

@@ -20,7 +20,7 @@ namespace AnyDeckBuilder
             this.card = card;
             if (card.imagePath != null)
             {
-                cardImage.Image = Bitmap.FromFile(card.imagePath);
+                cardImage.ImageLocation = card.imagePath;
             }
             else
             {

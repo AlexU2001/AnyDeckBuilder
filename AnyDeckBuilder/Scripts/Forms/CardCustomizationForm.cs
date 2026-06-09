@@ -53,11 +53,13 @@ namespace AnyDeckBuilder
         private void LoadData()
         {
             if (card.imagePath != null)
-                cardImage.Image = Bitmap.FromFile(card.imagePath);
+                SetCardImageLocation(card.imagePath);
             else
             {
-                cardImage.Image = Properties.Resources.Black;
+                cardPictureBox.Image = Properties.Resources.Black;
+                HideControls();
             }
+
 
             isEditing = true;
             nameTextBox.Text = card.name;
@@ -123,7 +125,7 @@ namespace AnyDeckBuilder
             addToCurrentDeckCheckBox.Checked = ProjectFile.Current.autoAddCardToCurrentDeck;
         }
 
-        private void cardImage_Click(object sender, EventArgs e)
+        private void SelectImageClick(object sender, EventArgs e)
         {
             if (openImageFileDialog.ShowDialog() == DialogResult.OK)
             {
@@ -132,10 +134,9 @@ namespace AnyDeckBuilder
                     var filePath = openImageFileDialog.FileName;
                     using (Stream str = openImageFileDialog.OpenFile())
                     {
-                        var img = Bitmap.FromStream(str);
-                        cardImage.Image = img;
-                        card.imagePath = filePath;
+                        SetCardImageLocation(filePath);
                     }
+                    HideControls();
                 }
                 catch (SecurityException ex)
                 {
@@ -143,6 +144,13 @@ namespace AnyDeckBuilder
                     $"Details:\n\n{ex.StackTrace}");
                 }
             }
+        }
+
+        private void HideControls()
+        {
+            orLabel.Visible = false;
+            selectImageButton.Visible = false;
+            urlTextBox.SetBounds(80, 570, urlTextBox.Width, urlTextBox.Height);
         }
 
         private void cancelButton_Click(object sender, EventArgs e)
@@ -264,6 +272,34 @@ namespace AnyDeckBuilder
             {
                 return;
             }
+        }
+
+
+
+        private void UrlTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                Console.WriteLine("Pressed");
+                this.ActiveControl = null;
+                e.SuppressKeyPress = true;
+                e.Handled = true;
+            }
+        }
+        private void UrlTextBox_LostFocus(object sender, EventArgs e)
+        {
+            SetCardImageLocation($"{urlTextBox.Text}");
+            Console.WriteLine("Lost focus");
+        }
+
+        private void SetCardImageLocation(string location)
+        {
+            if (string.IsNullOrEmpty(location))
+                return;
+
+            cardPictureBox.ImageLocation = location;
+            card.imagePath = location;
+            HideControls();
         }
     }
 }

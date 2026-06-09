@@ -21,6 +21,11 @@ namespace AnyDeckBuilder.Data
         [JsonIgnore]
         public string Value => Values == null ? string.Empty : Values[0];
         [JsonIgnore] public bool isValid => Values != null && Values.Length > 0;
+
+        /// <summary>
+        /// If the property should be treated as a tag when exporting to other platforms. Example, Table Top Simulator
+        /// </summary>
+        public bool? propertyAsTag;
         public void SetValue(string value)
         {
             if (Values == null || Values.Length > 1)

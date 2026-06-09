@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CardCustomizationForm));
-            cardImage = new PictureBox();
+            cardPictureBox = new PictureBox();
             openImageFileDialog = new OpenFileDialog();
             nameTextBox = new TextBox();
             nameLabel = new Label();
@@ -42,19 +42,22 @@
             templateComboBox = new ComboBox();
             templateLabel = new Label();
             propertiesPanel = new FlowLayoutPanel();
-            ((System.ComponentModel.ISupportInitialize)cardImage).BeginInit();
+            selectImageButton = new Button();
+            orLabel = new Label();
+            urlTextBox = new TextBox();
+            ((System.ComponentModel.ISupportInitialize)cardPictureBox).BeginInit();
             SuspendLayout();
             // 
-            // cardImage
+            // cardPictureBox
             // 
-            cardImage.Image = Properties.Resources.ClickToSelectAnImage;
-            cardImage.Location = new Point(35, 93);
-            cardImage.Name = "cardImage";
-            cardImage.Size = new Size(326, 457);
-            cardImage.SizeMode = PictureBoxSizeMode.Zoom;
-            cardImage.TabIndex = 0;
-            cardImage.TabStop = false;
-            cardImage.Click += cardImage_Click;
+            cardPictureBox.Image = Properties.Resources.ClickToSelectAnImage;
+            cardPictureBox.Location = new Point(35, 93);
+            cardPictureBox.Name = "cardPictureBox";
+            cardPictureBox.Size = new Size(326, 457);
+            cardPictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+            cardPictureBox.TabIndex = 0;
+            cardPictureBox.TabStop = false;
+            cardPictureBox.Click += SelectImageClick;
             // 
             // openImageFileDialog
             // 
@@ -170,18 +173,53 @@
             propertiesPanel.Size = new Size(567, 269);
             propertiesPanel.TabIndex = 11;
             // 
+            // selectImageButton
+            // 
+            selectImageButton.Location = new Point(105, 232);
+            selectImageButton.Name = "selectImageButton";
+            selectImageButton.Size = new Size(182, 34);
+            selectImageButton.TabIndex = 12;
+            selectImageButton.Text = "Select Image";
+            selectImageButton.UseVisualStyleBackColor = true;
+            selectImageButton.Click += SelectImageClick;
+            // 
+            // orLabel
+            // 
+            orLabel.AutoSize = true;
+            orLabel.BackColor = Color.Silver;
+            orLabel.Font = new Font("Segoe UI", 15F);
+            orLabel.Location = new Point(175, 287);
+            orLabel.Name = "orLabel";
+            orLabel.Size = new Size(46, 41);
+            orLabel.TabIndex = 13;
+            orLabel.Text = "or";
+            // 
+            // urlTextBox
+            // 
+            urlTextBox.Location = new Point(80, 340);
+            urlTextBox.Name = "urlTextBox";
+            urlTextBox.PlaceholderText = "Enter a valid URL";
+            urlTextBox.Size = new Size(243, 31);
+            urlTextBox.TabIndex = 14;
+            urlTextBox.TextAlign = HorizontalAlignment.Center;
+            urlTextBox.KeyDown += UrlTextBox_KeyDown;
+            urlTextBox.LostFocus += UrlTextBox_LostFocus;
+            // 
             // CardCustomizationForm
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(967, 708);
+            Controls.Add(urlTextBox);
+            Controls.Add(orLabel);
+            Controls.Add(selectImageButton);
             Controls.Add(propertiesPanel);
             Controls.Add(templateLabel);
             Controls.Add(templateComboBox);
             Controls.Add(addToCurrentDeckCheckBox);
             Controls.Add(saveButton);
             Controls.Add(cancelButton);
-            Controls.Add(cardImage);
+            Controls.Add(cardPictureBox);
             Controls.Add(cardPropertiesLabel);
             Controls.Add(descriptionLabel);
             Controls.Add(nameLabel);
@@ -190,14 +228,15 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "CardCustomizationForm";
             Text = "Edit Card";
-            ((System.ComponentModel.ISupportInitialize)cardImage).EndInit();
+            ((System.ComponentModel.ISupportInitialize)cardPictureBox).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
+
         #endregion
 
-        private PictureBox cardImage;
+        private PictureBox cardPictureBox;
         private OpenFileDialog openImageFileDialog;
         private TextBox nameTextBox;
         private Label nameLabel;
@@ -210,5 +249,8 @@
         private ComboBox templateComboBox;
         private Label templateLabel;
         private FlowLayoutPanel propertiesPanel;
+        private Button selectImageButton;
+        private Label orLabel;
+        private TextBox urlTextBox;
     }
 }

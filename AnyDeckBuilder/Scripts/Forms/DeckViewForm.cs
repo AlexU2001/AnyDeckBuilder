@@ -485,7 +485,8 @@ namespace AnyDeckBuilder
             if (selectedDeck == null)
                 return;
 
-            string script = File.ReadAllText(TTS_SCRIPT_TEMPLATE);
+            string jsonFile = $"jsonString = [[{ProjectFile.Current.ToJSON()}]]"; 
+            string script = jsonFile + "\n" + File.ReadAllText(TTS_SCRIPT_TEMPLATE);
             if (script == null)
                 return;
 
