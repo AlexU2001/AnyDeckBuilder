@@ -20,6 +20,15 @@ namespace AnyDeckBuilder.Data
             guid = Guid.NewGuid().ToString();
         }
 
+        public Card(Card other)
+        {
+            this.guid = other.guid;
+            this.name = other.name;
+            this.description = other.description;
+            this.imagePath = other.imagePath;
+            this.templateName = other.templateName;
+            this.properties = other.properties;
+        }
         public bool Equals(Card? other)
         {
             if (other == null)

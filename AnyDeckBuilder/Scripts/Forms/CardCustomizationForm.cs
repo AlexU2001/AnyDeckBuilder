@@ -6,16 +6,17 @@ namespace AnyDeckBuilder
     public partial class CardCustomizationForm : Form
     {
         public CardDisplay? display;
-        public Card card;
+        public Card? PreEditCard;
+        public Card Card;
         public bool isEditing;
         public static event EventHandler<Card>? OnCardCreate;
-        public event EventHandler<Card>? OnCardUpdate;
+        public static event EventHandler<CardChangeArgs>? OnCardUpdate;
         public CardCustomizationForm()
         {
             InitializeComponent();
             InitializeSettings();
             LoadDefaults();
-            card = new Card();
+            Card = new Card();
         }
 
         private void LoadDefaults()
@@ -34,7 +35,7 @@ namespace AnyDeckBuilder
                 if (templateComboBox.SelectedIndex == -1)
                     templateComboBox.SelectedIndex = 0;
 
-                if (card != null && card.IsUsingTemplate(template))
+                if (Card != null && Card.IsUsingTemplate(template))
                     templateComboBox.SelectedIndex = i;
             }
         }
@@ -43,7 +44,8 @@ namespace AnyDeckBuilder
         {
             this.Text = "Edit Card";
             this.display = display;
-            this.card = display.card;
+            this.Card = display.card;
+            this.PreEditCard = new Card(display.card);
             InitializeComponent();
             InitializeSettings();
             LoadDefaults();
@@ -52,8 +54,8 @@ namespace AnyDeckBuilder
 
         private void LoadData()
         {
-            if (card.imagePath != null)
-                SetCardImageLocation(card.imagePath);
+            if (Card.imagePath != null)
+                SetCardImageLocation(Card.imagePath);
             else
             {
                 cardPictureBox.Image = Properties.Resources.Black;
@@ -62,15 +64,15 @@ namespace AnyDeckBuilder
 
 
             isEditing = true;
-            nameTextBox.Text = card.name;
-            descriptionTextBox.Text = card.description;
+            nameTextBox.Text = Card.name;
+            descriptionTextBox.Text = Card.description;
 
-            if (card.properties == null)
+            if (Card.properties == null)
                 return;
 
-            if (card.templateName != null)
+            if (Card.templateName != null)
             {
-                if (Utility.TryGetCardTemplate(card.templateName, out var template))
+                if (Utility.TryGetCardTemplate(Card.templateName, out var template))
                 {
                     LoadProperties(template);
                     return;
@@ -79,7 +81,7 @@ namespace AnyDeckBuilder
 
             foreach (var template in Utility.GetCardTemplates())
             {
-                if (card.IsUsingTemplate(template))
+                if (Card.IsUsingTemplate(template))
                 {
                     LoadProperties(template);
                     return;
@@ -96,9 +98,9 @@ namespace AnyDeckBuilder
             {
                 var property = template.properties[i];
                 var control = AddPropertyControl(property);
-                if (card.properties != null)
+                if (Card.properties != null)
                 {
-                    control?.SetValue(card.properties[i].Values);
+                    control?.SetValue(Card.properties[i].Values);
                 }
             }
         }
@@ -109,7 +111,7 @@ namespace AnyDeckBuilder
                 return null;
 
             Console.WriteLine($"Adding {property}");
-            PropertyControl prop = new PropertyControl(card, property);
+            PropertyControl prop = new PropertyControl(Card, property);
             prop.Name = property.Name + " propertyControl";
             propertiesPanel.Controls.Add(prop);
             return prop;
@@ -160,16 +162,15 @@ namespace AnyDeckBuilder
 
         private void saveButton_Click(object sender, EventArgs e)
         {
-            SaveCard(ref card);
+            SaveCard(ref Card);
             if (!isEditing)
             {
-                ProjectFile.Current.AddCard(card);
-                OnCardCreate?.Invoke(this, card);
+                ProjectFile.Current.AddCard(Card);
+                OnCardCreate?.Invoke(this, Card);
             }
             else
             {
-                Console.WriteLine("Saving Edits");
-                OnCardUpdate?.Invoke(this, card);
+                OnCardUpdate?.Invoke(this, new CardChangeArgs(PreEditCard,Card));
             }
             Close();
         }
@@ -262,7 +263,7 @@ namespace AnyDeckBuilder
                     Console.WriteLine("Template Null exception");
                     return;
                 }
-                if (card.IsUsingTemplate(template) || template.properties == null)
+                if (Card.IsUsingTemplate(template) || template.properties == null)
                     return;
 
                 ClearProperties();
@@ -298,7 +299,7 @@ namespace AnyDeckBuilder
                 return;
 
             cardPictureBox.ImageLocation = location;
-            card.imagePath = location;
+            Card.imagePath = location;
             HideControls();
         }
     }

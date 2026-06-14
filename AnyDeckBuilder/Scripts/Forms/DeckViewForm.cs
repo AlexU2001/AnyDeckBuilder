@@ -16,7 +16,100 @@ namespace AnyDeckBuilder
             LoadProjectData();
             AdjustContentSize();
             CardCustomizationForm.OnCardCreate += UpdateDeckView;
+            CardCustomizationForm.OnCardUpdate += CardCustomizationForm_OnCardUpdate;
         }
+
+        private void CardCustomizationForm_OnCardUpdate(object? sender, CardChangeArgs e)
+        {
+            Console.WriteLine($"Update... {e.PreEditCard.name} - {e.Card.name} | {e.PreEditCard.name == e.Card.name}");
+            if (e.PreEditCard == null || e.PreEditCard.name == e.Card.name)
+                return;
+
+            if (TryGetNode(e.PreEditCard.name, out var node))
+            {
+                node.Name = e.Card.name;
+                node.Text = e.Card.name;
+                return;
+            }
+        }
+
+        private void LoadProjectData()
+        {
+            if (ProjectFile.isNull || ProjectFile.Current.decks.Count == 0)
+            {
+                selectedDeck = new Deck("Untitled Deck");
+                ProjectFile.Current.AddDeck(selectedDeck);
+            }
+            else
+            {
+                selectedDeck = ProjectFile.Current.decks[0];
+            }
+
+            ReloadNodesPanel();
+            LoadDeck(selectedDeck);
+        }
+
+        private void ReloadNodesPanel()
+        {
+            deckView.Nodes.Clear();
+            for (int i = 0; i < ProjectFile.Current.decks.Count; i++)
+            {
+                var deck = ProjectFile.Current.decks[i];
+                deckView.Nodes.Add(CreateNode(deck.name));
+                if (deck.cards == null)
+                    continue;
+
+                foreach (var cardGuid in deck.cards)
+                {
+                    if (!ProjectFile.Current.TryGetCard(cardGuid, out Card card))
+                        continue;
+
+                    deckView.Nodes[i].Nodes.Add(CreateNode(card.name));
+                }
+            }
+        }
+
+        private bool TryGetNode(string? name, out TreeNode? node)
+        {
+            Console.WriteLine($"Getting node with {name}");
+            node = null;
+            if (name == null)
+                return false;
+
+            foreach (TreeNode item in deckView.Nodes[0].Nodes)
+            {
+                Console.WriteLine($"Node: {item.Text}");
+            }
+            var results = deckView.Nodes.Find(name, true);
+            if (results.Length == 0)
+                return false;
+            node = results[0];
+            return true;
+        }
+
+        private TreeNode CreateNode(string name)
+        {
+            TreeNode node = new TreeNode(name);
+            node.Name = name;
+            return node;
+        }
+
+        private void LoadDeck(Deck deck)
+        {
+            if (deck == null)
+                return;
+
+            if (layoutPanel.Controls.Count > 0)
+                EmptyLayout();
+
+            foreach (var cardGuid in deck.cards)
+            {
+                if (!ProjectFile.Current.TryGetCard(cardGuid, out Card card))
+                    continue;
+                AddCardDisplay(card);
+            }
+        }
+
         #region Main Toolbar
         private void newFileButton_Click(object sender, EventArgs e)
         {
@@ -101,58 +194,6 @@ namespace AnyDeckBuilder
                 }
             }
         }
-        private void LoadProjectData()
-        {
-            if (ProjectFile.isNull || ProjectFile.Current.decks.Count == 0)
-            {
-                selectedDeck = new Deck("Untitled Deck");
-                ProjectFile.Current.AddDeck(selectedDeck);
-            }
-            else
-            {
-                selectedDeck = ProjectFile.Current.decks[0];
-            }
-
-            ReloadNodesPanel();
-            LoadDeck(selectedDeck);
-        }
-
-        private void ReloadNodesPanel()
-        {
-            deckView.Nodes.Clear();
-            for (int i = 0; i < ProjectFile.Current.decks.Count; i++)
-            {
-                var deck = ProjectFile.Current.decks[i];
-                deckView.Nodes.Add(deck.name);
-
-                if (deck.cards == null)
-                    continue;
-
-                foreach (var cardGuid in deck.cards)
-                {
-                    if (!ProjectFile.Current.TryGetCard(cardGuid, out Card card))
-                        continue;
-
-                    deckView.Nodes[i].Nodes.Add(card.name);
-                }
-            }
-        }
-
-        private void LoadDeck(Deck deck)
-        {
-            if (deck == null)
-                return;
-
-            if (layoutPanel.Controls.Count > 0)
-                EmptyLayout();
-
-            foreach (var cardGuid in deck.cards)
-            {
-                if (!ProjectFile.Current.TryGetCard(cardGuid, out Card card))
-                    continue;
-                AddCardDisplay(card);
-            }
-        }
 
         private void EmptyLayout()
         {
@@ -162,13 +203,6 @@ namespace AnyDeckBuilder
                 layoutPanel.Controls.RemoveAt(i);
                 control.Dispose();
             }
-        }
-
-        private void AddCardDisplay(Card card)
-        {
-            var display = new CardDisplay(card);
-            display.Size = currentSize;
-            layoutPanel.Controls.Add(display);
         }
 
         private void AddCardToDeck(Deck deck, Card card, bool addDisplay = false)
@@ -183,13 +217,191 @@ namespace AnyDeckBuilder
             if (addDisplay)
                 AddCardDisplay(card);
         }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void ttsDeckExportButton_Click(object sender, EventArgs e)
+        {
+            if (selectedDeck == null)
+                return;
+
+            string jsonFile = $"jsonString = [[{ProjectFile.Current.ToJSON()}]]";
+            string script = jsonFile + "\n" + File.ReadAllText(TTS_SCRIPT_TEMPLATE);
+            if (script == null)
+                return;
+
+            Clipboard.SetText(script);
+            Console.WriteLine($"Copied Lua Script: \n {script}");
+        }
+
+        private void newDeckButton(object sender, EventArgs e)
+        {
+            Deck newDeck = new Deck($"Deck {ProjectFile.Current.decks.Count}");
+            ProjectFile.Current.AddDeck(newDeck);
+            LoadDeck(newDeck);
+            selectedDeck = newDeck;
+            ReloadNodesPanel();
+        }
+
+        private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (selectedDeck == null || selectedDeck.cards == null)
+                return;
+
+            ExportAs();
+        }
+
+        private void ExportAs()
+        {
+            if (selectedDeck == null || selectedDeck.cards == null)
+                return;
+
+            if (!string.IsNullOrEmpty(selectedDeck.exportPath))
+                saveExportedFileDialog.InitialDirectory = Path.GetDirectoryName(selectedDeck.exportPath);
+
+            saveExportedFileDialog.FileName = selectedDeck.exportName;
+            if (saveExportedFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    using (var stream = new FileStream(saveExportedFileDialog.FileName, FileMode.Create))
+                    {
+                        selectedDeck.exportPath = saveExportedFileDialog.FileName;
+                        ExportFileToPath(stream);
+                    }
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+        }
+
+        private async void ExportFileToPath(FileStream stream)
+        {
+            if (selectedDeck?.cards == null)
+                return;
+
+            var cardSize = await GetCardSizeAsync();
+            var dimensions = GetExportDimensions();
+            var canvasSize = GetCanvasSize(cardSize, dimensions);
+
+            using (var canvas = new Bitmap(canvasSize.Width, canvasSize.Height))
+            {
+                //Console.WriteLine($"Canvas Size: {canvas.Size}");
+                using (var gr = Graphics.FromImage(canvas))
+                {
+                    gr.Clear(Color.Black);
+                    int index = 0;
+                    foreach (var cardGuid in selectedDeck.cards)
+                    {
+                        if (!ProjectFile.Current.TryGetCard(cardGuid, out Card card))
+                            continue;
+
+                        if (card.imagePath == null)
+                            continue;
+
+                        int x = cardSize.Width * (index % dimensions.Width);
+                        int y = cardSize.Height * (index / dimensions.Width);
+                        var rectangle = new Rectangle(x, y, cardSize.Width, cardSize.Height);
+                        Console.WriteLine($"{card.name}'s Rectangle: {rectangle}");
+                        Image image = await ImageLibrary.GetImageAsync(card.imagePath);
+                        gr.DrawImage(image, rectangle);
+                        index++;
+                    }
+                    var format = GetFormatFromFilterIndex(saveExportedFileDialog.FilterIndex);
+                    canvas.Save(stream, format);
+                }
+            }
+        }
+
+        private ImageFormat GetFormatFromFilterIndex(int index)
+        {
+            switch (index)
+            {
+                case 1:
+                    return ImageFormat.Png;
+                case 2:
+                    return ImageFormat.Jpeg;
+                default:
+                    throw new ArgumentException("Unable to determine file format");
+            }
+        }
+
+        private Size GetExportDimensions()
+        {
+            if (selectedDeck == null)
+                return ProjectFile.Current.exportDimensions;
+
+            var dimensions = ProjectFile.Current.exportDimensions;
+            if (ProjectFile.Current.autoExportSize && selectedDeck.cards != null)
+            {
+                dimensions.Width = EXPORT_COLUMNS;
+                dimensions.Height = (selectedDeck.cards.Count / EXPORT_COLUMNS) + 1;
+            }
+            selectedDeck.exportX = dimensions.Width;
+            selectedDeck.exportY = dimensions.Height;
+            return dimensions;
+        }
+
+        private async Task<Size> GetCardSizeAsync()
+        {
+            if (selectedDeck == null || selectedDeck.cards == null)
+            {
+                Console.WriteLine("Exiting, null deck or empty cards list");
+                return ProjectFile.Current.cardSize;
+            }
+
+            foreach (var cardGuid in selectedDeck.cards)
+            {
+                if (!ProjectFile.Current.TryGetCard(cardGuid, out Card card))
+                    continue;
+
+
+                if (Utility.TryGetCardTemplate(card.templateName, out var template))
+                {
+                    if (!template.dynamicSize)
+                        return template.size;
+                }
+
+                if (card.imagePath != null)
+                {
+                    Image referenceImage = await ImageLibrary.GetImageAsync(card.imagePath);
+                    return new Size(referenceImage.Width, referenceImage.Height);
+                }
+            }
+            Console.WriteLine("Failed to get card size");
+            return new Size(100, 100);
+        }
+
+        private Size GetCanvasSize(Size cardSize, Size dimensions)
+        {
+            int columns = dimensions.Width;
+            int rows = dimensions.Height;
+            Console.WriteLine($"Card Size: {cardSize} Dimensions: {dimensions}");
+            return new Size(cardSize.Width * columns, cardSize.Height * rows);
+        }
+
         #endregion
         #region Panel1
         private void DeckView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (e.Node?.Parent == null)
+            Console.WriteLine("Double click on node: " + e.Node?.Name);
+            if (e.Node?.Parent != null)
             {
-                // open card editing
+                Console.WriteLine("Node is a card, looking for matching card display");
+                foreach (var display in layoutPanel.Controls)
+                {
+                    if (display is CardDisplay cardDisplay && cardDisplay.card.name == e.Node?.Name)
+                    {
+                        new CardCustomizationForm(cardDisplay).ShowDialog();
+                        return;
+                    }
+                }
                 return;
             }
 
@@ -335,163 +547,16 @@ namespace AnyDeckBuilder
         }
         #endregion
 
-        private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+        private void AddCardDisplay(Card card)
         {
-            if (selectedDeck == null || selectedDeck.cards == null)
-                return;
-
-            ExportAs();
+            var display = new CardDisplay(card);
+            display.Size = currentSize;
+            layoutPanel.Controls.Add(display);
         }
 
-        private void ExportAs()
+        private void AddCardNode(Card card)
         {
-            if (selectedDeck == null || selectedDeck.cards == null)
-                return;
-
-            if (!string.IsNullOrEmpty(selectedDeck.exportPath))
-                saveExportedFileDialog.InitialDirectory = Path.GetDirectoryName(selectedDeck.exportPath);
-
-            saveExportedFileDialog.FileName = selectedDeck.exportName;
-            if (saveExportedFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                try
-                {
-                    using (var stream = new FileStream(saveExportedFileDialog.FileName, FileMode.Create))
-                    {
-                        selectedDeck.exportPath = saveExportedFileDialog.FileName;
-                        ExportFileToPath(stream);
-                    }
-                }
-                catch (Exception)
-                {
-
-                    throw;
-                }
-            }
-        }
-
-        private void ExportFileToPath(FileStream stream)
-        {
-            if (selectedDeck?.cards == null)
-                return;
-
-            var cardSize = GetCardSize();
-            var dimensions = GetExportDimensions();
-            var canvasSize = GetCanvasSize(cardSize, dimensions);
-
-            using (var canvas = new Bitmap(canvasSize.Width, canvasSize.Height))
-            {
-                //Console.WriteLine($"Canvas Size: {canvas.Size}");
-                using (var gr = Graphics.FromImage(canvas))
-                {
-                    gr.Clear(Color.Black);
-                    int index = 0;
-                    foreach (var cardGuid in selectedDeck.cards)
-                    {
-                        if (!ProjectFile.Current.TryGetCard(cardGuid, out Card card))
-                            continue;
-
-                        if (card.imagePath == null)
-                            continue;
-
-                        int x = cardSize.Width * (index % dimensions.Width);
-                        int y = cardSize.Height * (index / dimensions.Width);
-                        var rectangle = new Rectangle(x, y, cardSize.Width, cardSize.Height);
-                        Console.WriteLine($"{card.name}'s Rectangle: {rectangle}");
-                        Image image = Bitmap.FromFile(card.imagePath);
-                        gr.DrawImage(image, rectangle);
-                        index++;
-                    }
-                    var format = GetFormatFromFilterIndex(saveExportedFileDialog.FilterIndex);
-                    canvas.Save(stream, format);
-                }
-            }
-        }
-
-        private ImageFormat GetFormatFromFilterIndex(int index)
-        {
-            switch (index)
-            {
-                case 1:
-                    return ImageFormat.Png;
-                case 2:
-                    return ImageFormat.Jpeg;
-                default:
-                    throw new ArgumentException("Unable to determine file format");
-            }
-        }
-
-        private Size GetExportDimensions()
-        {
-            if (selectedDeck == null)
-                return ProjectFile.Current.exportDimensions;
-
-            var dimensions = ProjectFile.Current.exportDimensions;
-            if (ProjectFile.Current.autoExportSize && selectedDeck.cards != null)
-            {
-                dimensions.Width = EXPORT_COLUMNS;
-                dimensions.Height = (selectedDeck.cards.Count / EXPORT_COLUMNS) + 1;
-            }
-            selectedDeck.exportX = dimensions.Width;
-            selectedDeck.exportY = dimensions.Height;
-            return dimensions;
-        }
-
-        private Size GetCardSize()
-        {
-            if (selectedDeck == null || selectedDeck.cards == null)
-            {
-                Console.WriteLine("Exiting, null deck or empty cards list");
-                return ProjectFile.Current.cardSize;
-            }
-
-            foreach (var cardGuid in selectedDeck.cards)
-            {
-                if (!ProjectFile.Current.TryGetCard(cardGuid, out Card card))
-                    continue;
-
-
-                if (Utility.TryGetCardTemplate(card.templateName, out var template))
-                {
-                    if (!template.dynamicSize)
-                        return template.size;
-                }
-
-                if (card.imagePath != null)
-                {
-                    Image referenceImage = Bitmap.FromFile(card.imagePath);
-                    return new Size(referenceImage.Width, referenceImage.Height);
-                }
-            }
-            Console.WriteLine("Failed to get card size");
-            return new Size(100, 100);
-        }
-
-        private Size GetCanvasSize(Size cardSize, Size dimensions)
-        {
-            int columns = dimensions.Width;
-            int rows = dimensions.Height;
-            Console.WriteLine($"Card Size: {cardSize} Dimensions: {dimensions}");
-            return new Size(cardSize.Width * columns, cardSize.Height * rows);
-        }
-
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        private void tTSDeckToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (selectedDeck == null)
-                return;
-
-            string jsonFile = $"jsonString = [[{ProjectFile.Current.ToJSON()}]]"; 
-            string script = jsonFile + "\n" + File.ReadAllText(TTS_SCRIPT_TEMPLATE);
-            if (script == null)
-                return;
-
-            Clipboard.SetText(script);
-            Console.WriteLine($"Copied Lua Script: \n {script}");
+            deckView.Nodes.Find(selectedDeck.name, false)[0].Nodes.Add(card.name);
         }
     }
 }

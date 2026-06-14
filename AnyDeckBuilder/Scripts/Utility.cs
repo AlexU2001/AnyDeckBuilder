@@ -69,5 +69,25 @@ namespace AnyDeckBuilder
                 }
             }
         }
+
+        public static bool PathIsLocalFile(string path)
+        {
+            return File.Exists(path);
+        }
+
+        public static bool PathIsUrl(string path)
+        {
+            if (File.Exists(path))
+                return false;
+            try
+            {
+                Uri uri = new Uri(path);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
 }

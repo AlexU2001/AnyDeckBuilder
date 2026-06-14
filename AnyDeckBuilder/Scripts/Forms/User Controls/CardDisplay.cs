@@ -15,12 +15,12 @@ namespace AnyDeckBuilder
             SetCard(card);
         }
 
-        public void SetCard(Card card)
+        public async void SetCard(Card card)
         {
             this.card = card;
             if (card.imagePath != null)
             {
-                cardImage.ImageLocation = card.imagePath;
+                cardImage.Image = await ImageLibrary.GetImageAsync(card.imagePath);
             }
             else
             {
@@ -81,7 +81,6 @@ namespace AnyDeckBuilder
 
         private void EditCardMenuItem_Click(object? sender, EventArgs e)
         {
-            Console.WriteLine("Opening card edit form");
             CardCustomizationForm form = new CardCustomizationForm(this);
             form.ShowDialog();
         }
