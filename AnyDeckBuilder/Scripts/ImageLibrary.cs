@@ -3,12 +3,12 @@
     public static class ImageLibrary
     {
         private static Dictionary<string, Image> m_imageDictionary = new Dictionary<string, Image>();
-
+        private const string DRIVE_DOWNLOAD_URL = "https://drive.google.com/uc?export=download&id=";
         public static async Task<Image> GetImageAsync(string path)
         {
             if (m_imageDictionary.ContainsKey(path))
                 return m_imageDictionary[path];
-            
+
             Image image;
             if (Utility.PathIsUrl(path))
                 image = await GetImageViaURL(path);
@@ -21,6 +21,10 @@
 
         static async Task<Image> GetImageViaURL(string url)
         {
+            Console.WriteLine("Line");
+            if (url.Contains("drive.google.com"))
+                TryConvertGoogleDriveToDownloadable(ref url);
+
             Console.WriteLine("Getting image from url: " + url);
             using (HttpClient client = new HttpClient())
             using (HttpResponseMessage response = await client.GetAsync(url))
@@ -42,6 +46,16 @@
                     }
                 }
             }
+        }
+
+        private static void TryConvertGoogleDriveToDownloadable(ref string link)
+        {
+            if (link.Contains(DRIVE_DOWNLOAD_URL))
+                return;
+
+            var array = link.Split("/d/");
+            link = $"{DRIVE_DOWNLOAD_URL}" + array[1].Substring(0, 33);
+            Console.WriteLine($"Adjusted Link: {link}");
         }
 
         private static Image GetImageViaPath(string path)

@@ -55,7 +55,7 @@ namespace AnyDeckBuilder
         private void LoadData()
         {
             if (Card.imagePath != null)
-                SetCardImageLocation(Card.imagePath);
+                SetCardImage(Card.imagePath);
             else
             {
                 cardPictureBox.Image = Properties.Resources.Black;
@@ -136,7 +136,7 @@ namespace AnyDeckBuilder
                     var filePath = openImageFileDialog.FileName;
                     using (Stream str = openImageFileDialog.OpenFile())
                     {
-                        SetCardImageLocation(filePath);
+                        SetCardImage(filePath);
                     }
                     HideControls();
                 }
@@ -289,17 +289,17 @@ namespace AnyDeckBuilder
         }
         private void UrlTextBox_LostFocus(object sender, EventArgs e)
         {
-            SetCardImageLocation($"{urlTextBox.Text}");
+            SetCardImage($"{urlTextBox.Text}");
             Console.WriteLine("Lost focus");
         }
 
-        private void SetCardImageLocation(string location)
+        private async void SetCardImage(string path)
         {
-            if (string.IsNullOrEmpty(location))
+            if (string.IsNullOrEmpty(path))
                 return;
 
-            cardPictureBox.ImageLocation = location;
-            Card.imagePath = location;
+            cardPictureBox.Image = await ImageLibrary.GetImageAsync(path); 
+            Card.imagePath = path;
             HideControls();
         }
     }
