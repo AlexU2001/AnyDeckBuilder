@@ -22,15 +22,16 @@ namespace AnyDeckBuilder
         private void CardCustomizationForm_OnCardUpdate(object? sender, CardChangeArgs e)
         {
             Console.WriteLine($"Update... {e.PreEditCard.name} - {e.Card.name} | {e.PreEditCard.name == e.Card.name}");
+            UpdateCardNode(e);
+        }
+
+        private void UpdateCardNode(CardChangeArgs e)
+        {
             if (e.PreEditCard == null || e.PreEditCard.name == e.Card.name)
                 return;
 
-            if (TryGetNode(e.PreEditCard.name, out var node))
-            {
-                node.Name = e.Card.name;
+            if (TryGetNode(e.Card.guid, out var node))
                 node.Text = e.Card.name;
-                return;
-            }
         }
 
         private void LoadProjectData()
@@ -64,7 +65,7 @@ namespace AnyDeckBuilder
                     if (!ProjectFile.Current.TryGetCard(cardGuid, out Card card))
                         continue;
 
-                    deckView.Nodes[i].Nodes.Add(CreateNode(card.name));
+                    deckView.Nodes[i].Nodes.Add(CreateNodeFromCard(card));
                 }
             }
         }
@@ -87,6 +88,12 @@ namespace AnyDeckBuilder
             return true;
         }
 
+        private TreeNode CreateNodeFromCard(Card card)
+        {
+            TreeNode node = new TreeNode(card.name);
+            node.Name = card.guid;
+            return node;
+        }
         private TreeNode CreateNode(string name)
         {
             TreeNode node = new TreeNode(name);
@@ -211,7 +218,12 @@ namespace AnyDeckBuilder
                 return;
 
             if (!ProjectFile.Current.cardsDict.ContainsKey(card.guid))
+            {
                 ProjectFile.Current.AddCard(card);
+            }
+
+            if (deckView.Nodes.ContainsKey(card.name))
+                AddCardNode(card);
 
             deck.AddCard(card.guid);
             if (addDisplay)
@@ -556,7 +568,12 @@ namespace AnyDeckBuilder
 
         private void AddCardNode(Card card)
         {
-            deckView.Nodes.Find(selectedDeck.name, false)[0].Nodes.Add(card.name);
+            deckView.Nodes.Find(selectedDeck.name, false)[0].Nodes.Add(CreateNodeFromCard(card));
+        }
+
+        private void importToDeckButton_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

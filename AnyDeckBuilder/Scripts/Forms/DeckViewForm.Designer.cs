@@ -95,7 +95,7 @@
             cardDropdown = new ToolStripDropDownButton();
             newToolStripMenuItem1 = new ToolStripMenuItem();
             addExistingToolStripMenuItem = new ToolStripMenuItem();
-            importToolStripMenuItem1 = new ToolStripMenuItem();
+            importToDeckButton = new ToolStripMenuItem();
             toolStripSeparator4 = new ToolStripSeparator();
             saveButton = new ToolStripButton();
             toolStripButton3 = new ToolStripButton();
@@ -103,6 +103,7 @@
             saveProjectDIalog = new SaveFileDialog();
             openProjectDialog = new OpenFileDialog();
             saveExportedFileDialog = new SaveFileDialog();
+            openCharDelimitedFile = new OpenFileDialog();
             newDeckToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -537,14 +538,14 @@
             // ttsDeckExportButton
             // 
             ttsDeckExportButton.Name = "ttsDeckExportButton";
-            ttsDeckExportButton.Size = new Size(270, 34);
+            ttsDeckExportButton.Size = new Size(217, 34);
             ttsDeckExportButton.Text = "TTS Deck";
             ttsDeckExportButton.Click += ttsDeckExportButton_Click;
             // 
             // deckAsjsonToolStripMenuItem
             // 
             deckAsjsonToolStripMenuItem.Name = "deckAsjsonToolStripMenuItem";
-            deckAsjsonToolStripMenuItem.Size = new Size(270, 34);
+            deckAsjsonToolStripMenuItem.Size = new Size(217, 34);
             deckAsjsonToolStripMenuItem.Text = "Deck as .json";
             // 
             // toolStripSeparator5
@@ -605,7 +606,7 @@
             // cardDropdown
             // 
             cardDropdown.DisplayStyle = ToolStripItemDisplayStyle.Text;
-            cardDropdown.DropDownItems.AddRange(new ToolStripItem[] { newToolStripMenuItem1, addExistingToolStripMenuItem, importToolStripMenuItem1 });
+            cardDropdown.DropDownItems.AddRange(new ToolStripItem[] { newToolStripMenuItem1, addExistingToolStripMenuItem, importToDeckButton });
             cardDropdown.Image = (Image)resources.GetObject("cardDropdown.Image");
             cardDropdown.ImageTransparentColor = Color.Magenta;
             cardDropdown.Name = "cardDropdown";
@@ -624,11 +625,12 @@
             addExistingToolStripMenuItem.Size = new Size(236, 34);
             addExistingToolStripMenuItem.Text = "Add Existing";
             // 
-            // importToolStripMenuItem1
+            // importToDeckButton
             // 
-            importToolStripMenuItem1.Name = "importToolStripMenuItem1";
-            importToolStripMenuItem1.Size = new Size(236, 34);
-            importToolStripMenuItem1.Text = "Import To Deck";
+            importToDeckButton.Name = "importToDeckButton";
+            importToDeckButton.Size = new Size(236, 34);
+            importToDeckButton.Text = "Import To Deck";
+            importToDeckButton.Click += importToDeckButton_Click;
             // 
             // toolStripSeparator4
             // 
@@ -678,6 +680,10 @@
             // saveExportedFileDialog
             // 
             saveExportedFileDialog.Filter = "PNG|*.png|JPEG|*.jpg*.jpeg";
+            // 
+            // openCharDelimitedFile
+            // 
+            openCharDelimitedFile.Filter = "DSV File | *.csv *.tsv *.txt|All Files|*.*";
             // 
             // DeckViewForm
             // 
@@ -778,6 +784,7 @@
         private ToolStripDropDownButton cardDropdown;
         private ToolStripMenuItem newToolStripMenuItem1;
         private ToolStripMenuItem addExistingToolStripMenuItem;
-        private ToolStripMenuItem importToolStripMenuItem1;
+        private ToolStripMenuItem importToDeckButton;
+        private OpenFileDialog openCharDelimitedFile;
     }
 }

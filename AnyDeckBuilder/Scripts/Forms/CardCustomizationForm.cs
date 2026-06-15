@@ -170,14 +170,15 @@ namespace AnyDeckBuilder
             }
             else
             {
-                OnCardUpdate?.Invoke(this, new CardChangeArgs(PreEditCard,Card));
+                OnCardUpdate?.Invoke(this, new CardChangeArgs(PreEditCard, Card));
             }
             Close();
         }
 
         private void SaveCard(ref Card card)
         {
-            card.name = $"{nameTextBox.Text}";
+            if (!string.IsNullOrEmpty(nameTextBox.Text))
+                card.name = $"{nameTextBox.Text}";
             card.description = $"{descriptionTextBox.Text}";
             if (display != null)
                 display.SetCard(card);
@@ -298,7 +299,7 @@ namespace AnyDeckBuilder
             if (string.IsNullOrEmpty(path))
                 return;
 
-            cardPictureBox.Image = await ImageLibrary.GetImageAsync(path); 
+            cardPictureBox.Image = await ImageLibrary.GetImageAsync(path);
             Card.imagePath = path;
             HideControls();
         }

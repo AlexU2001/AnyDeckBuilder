@@ -18,6 +18,7 @@ namespace AnyDeckBuilder.Data
         public Card()
         {
             guid = Guid.NewGuid().ToString();
+            name = $"Unnamed Card {ProjectFile.Current.cardsDict.Count}";
         }
 
         public Card(Card other)
