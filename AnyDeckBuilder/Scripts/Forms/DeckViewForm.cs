@@ -1,4 +1,6 @@
 using AnyDeckBuilder.Data;
+using Microsoft.VisualBasic.FileIO;
+using System.Data;
 using System.Drawing.Imaging;
 using System.Security;
 using System.Text;
@@ -573,7 +575,71 @@ namespace AnyDeckBuilder
 
         private void importToDeckButton_Click(object sender, EventArgs e)
         {
+            if (openCharDelimitedFile.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    using (var stream = new FileStream(openCharDelimitedFile.FileName, FileMode.Open))
+                    {
+                        using (var sr = new StreamReader(stream))
+                        {
+                            var table = ParseFile(sr, ",");
+                            var form = new DataViewForm(table);
+                            form.ShowDialog();
+                        }
+                    }
+                }
+                catch (Exception)
+                {
 
+                    throw;
+                }
+            }
+        }
+
+        private DataTable ParseFile(StreamReader reader, params string[] delimeters)
+        {
+            if (delimeters.Length == 0)
+                return Card.Table.GetEmpty();
+
+            using (TextFieldParser parser = new TextFieldParser(reader))
+            {
+                bool hasHeaderBeenSkipped = false;
+                DataTable table = Card.Table.GetEmpty();
+                parser.SetDelimiters(delimeters);
+                while (!parser.EndOfData)
+                {
+                    DataRow row = table.NewRow();
+                    string[]? fields = parser.ReadFields();
+                    if (fields == null)
+                        continue;
+
+                    if (!hasHeaderBeenSkipped)
+                    {
+                        hasHeaderBeenSkipped = true;
+                        continue;
+                    }
+
+                    Console.WriteLine($"Parsing {fields.Length} fields");
+                    if (table.Columns.Count == fields.Length || fields.Length < table.Columns.Count)
+                        row.ItemArray = fields;
+                    else if (fields.Length > table.Columns.Count)
+                    {
+                        Console.WriteLine("Expanding table...");
+                        for (int i = table.Columns.Count; i < fields.Length; i++)
+                        {
+                            table.Columns.Add($"Property {i - Card.Table.COLUMNS_LENGTH}");
+                        }
+                        row = table.NewRow();
+                        row.ItemArray = fields;
+                        foreach (string item in row.ItemArray)
+                            Console.WriteLine(item);
+                    }
+                    table.Rows.Add(row);
+                    Console.WriteLine($"Rows: {table.Rows.Count}");
+                }
+                return table;
+            }
         }
     }
 }

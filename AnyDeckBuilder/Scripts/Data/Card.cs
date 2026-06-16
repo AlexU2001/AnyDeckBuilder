@@ -1,4 +1,6 @@
 ﻿
+using System.Data;
+
 namespace AnyDeckBuilder.Data
 {
     public class Card : IEquatable<Card>
@@ -10,7 +12,6 @@ namespace AnyDeckBuilder.Data
         public string? name;
         public string? description;
         public string? imagePath;
-        public bool isPathUrl;
 
         public string? templateName;
         public CardProperty[]? properties;
@@ -44,7 +45,55 @@ namespace AnyDeckBuilder.Data
         }
         public override string ToString()
         {
-            return $"{guid},{name},{description},{imagePath},{isPathUrl}";
+            return $"{guid},{name},{description},{imagePath}";
+        }
+
+        public class Table
+        {
+            public const int COLUMNS_LENGTH = 5;
+
+            private static DataTable? defaultTable;
+            public static DataTable GetEmpty()
+            {
+                if (defaultTable == null)
+                {
+                    defaultTable = new DataTable();
+                    defaultTable.Columns.Add("GUID");
+                    defaultTable.Columns.Add("Name");
+                    defaultTable.Columns.Add("Description");
+                    defaultTable.Columns.Add("Image Path");
+                    defaultTable.Columns.Add("Template Name");
+                }
+                return defaultTable;
+            }
+            public static DataTable GetTableTemplate(string templateName)
+            {
+                DataTable table = new DataTable();
+                table.Columns.Add("GUID");
+                table.Columns.Add("Name");
+                table.Columns.Add("Description");
+                table.Columns.Add("Image Path");
+                table.Columns.Add("Template Name");
+                if (Utility.TryGetCardTemplate(templateName, out var cardTemplate))
+                {
+                    if (cardTemplate.properties == null)
+                        return table;
+
+                    foreach (var prop in cardTemplate.properties)
+                    {
+                        table.Columns.Add(prop.Name);
+                    }
+                }
+                return table;
+            }
+
+            private static DataColumn CreateColumn(string name)
+            {
+                DataColumn column = new DataColumn();
+                column.ColumnName = name;
+                column.DataType = typeof(string);
+                return column;
+            }
         }
     }
 }

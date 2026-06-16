@@ -683,7 +683,7 @@
             // 
             // openCharDelimitedFile
             // 
-            openCharDelimitedFile.Filter = "DSV File | *.csv *.tsv *.txt|All Files|*.*";
+            openCharDelimitedFile.Filter = "CSV File | *.csv|All Files|*.*";
             // 
             // DeckViewForm
             // 
