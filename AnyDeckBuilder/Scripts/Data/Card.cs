@@ -1,5 +1,6 @@
 ﻿
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 
 namespace AnyDeckBuilder.Data
 {
@@ -8,7 +9,7 @@ namespace AnyDeckBuilder.Data
         /// <summary>
         /// Unique ID generated when a card is created
         /// </summary>
-        public string guid { get; private set; }
+        public string guid { get; protected set; }
         public string? name;
         public string? description;
         public string? imagePath;
@@ -48,6 +49,79 @@ namespace AnyDeckBuilder.Data
             return $"{guid},{name},{description},{imagePath}";
         }
 
+        public class Builder : Builder<Card>
+        {
+            [SetsRequiredMembers]
+            public Builder()
+            {
+                card = new Card();
+            }
+            public Builder SetGUID(string? GUID)
+            {
+                if (string.IsNullOrEmpty(GUID))
+                    return this;
+                card.guid = GUID;
+                return this;
+            }
+
+            public Builder SetName(string? Name)
+            {
+                card.name = Name;
+                return this;
+            }
+
+            public Builder SetDescription(string? Description)
+            {
+                card.description = Description;
+                return this;
+            }
+
+            public Builder SetImagePath(string? ImagePath)
+            {
+                card.imagePath = ImagePath;
+                return this;
+            }
+
+            public Builder SetTemplate(string? templateName)
+            {
+                card.templateName = templateName;
+                return this;
+            }
+
+            public Builder SetProperty(int index, string propertyValue)
+            {
+                if (card == null)
+                    return this;
+
+                if (card.properties == null || card.properties.Length <= index)
+                {
+                    if (Utility.TryGetCardTemplate(card.templateName, out var template))
+                    {
+                        if (card.properties == null || card.properties.Length == 0)
+                            card.properties = template.properties;
+                    }
+                    else
+                    {
+                        CardProperty[] originalProperties = card.properties;
+                        card.properties = new CardProperty[index + 1];
+                        if (originalProperties == null || originalProperties.Length == 0)
+                        {
+                            for (int i = 0; i < card.properties.Length; i++)
+                                card.properties[i].Name = $"Property {i + 1}";
+                        }
+                        else
+                        {
+                            for (int i = 0; i < originalProperties.Length; i++)
+                                card.properties[i] = originalProperties[i];
+                        }
+                    }
+                }
+
+                card.properties[index].SetValue(propertyValue);
+                return this;
+            }
+        }
+
         public class Table
         {
             public const int COLUMNS_LENGTH = 5;
@@ -59,21 +133,16 @@ namespace AnyDeckBuilder.Data
                 {
                     defaultTable = new DataTable();
                     defaultTable.Columns.Add("GUID");
-                    defaultTable.Columns.Add("Name");
-                    defaultTable.Columns.Add("Description");
-                    defaultTable.Columns.Add("Image Path");
-                    defaultTable.Columns.Add("Template Name");
+                    defaultTable.Columns.Add("NAME");
+                    defaultTable.Columns.Add("DESCRIPTION");
+                    defaultTable.Columns.Add("IMAGE PATH");
+                    defaultTable.Columns.Add("TEMPLATE NAME");
                 }
-                return defaultTable;
+                return defaultTable.Clone();
             }
             public static DataTable GetTableTemplate(string templateName)
             {
-                DataTable table = new DataTable();
-                table.Columns.Add("GUID");
-                table.Columns.Add("Name");
-                table.Columns.Add("Description");
-                table.Columns.Add("Image Path");
-                table.Columns.Add("Template Name");
+                DataTable table = GetEmpty();
                 if (Utility.TryGetCardTemplate(templateName, out var cardTemplate))
                 {
                     if (cardTemplate.properties == null)
@@ -85,14 +154,6 @@ namespace AnyDeckBuilder.Data
                     }
                 }
                 return table;
-            }
-
-            private static DataColumn CreateColumn(string name)
-            {
-                DataColumn column = new DataColumn();
-                column.ColumnName = name;
-                column.DataType = typeof(string);
-                return column;
             }
         }
     }

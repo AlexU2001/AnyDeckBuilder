@@ -76,11 +76,51 @@ namespace AnyDeckBuilder.Data
             m_current = file;
         }
 
+        public Deck GetOrAddDeck(string name)
+        {
+            if (TryGetDeck(name, out Deck deck))
+                return deck;
+            Deck newDeck = new Deck(name);
+            AddDeck(newDeck);
+            return newDeck;
+        }
+
         public bool TryGetCard(string cardGuid, out Card card)
         {
             if (cardsDict.TryGetValue(cardGuid, out card))
                 return true;
             return false;
+        }
+
+        public void AddCards(Card[] cards)
+        {
+            foreach (Card card in cards)
+                AddCard(card);
+        }
+
+        public bool TryGetDeck(string name, out Deck result)
+        {
+            result = Deck.Empty;
+            foreach (var deck in decks)
+            {
+                if (deck.name == name)
+                {
+                    result = deck;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public Deck? DeleteDeck(string name)
+        {
+            if (decks.Count <= 1)
+                return null;
+
+            if (!TryGetDeck(name, out Deck deck))
+                return null;
+            decks.Remove(deck);
+            return deck;
         }
     }
 }

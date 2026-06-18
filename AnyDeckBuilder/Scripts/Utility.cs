@@ -1,4 +1,6 @@
 ﻿using AnyDeckBuilder.Data;
+using Microsoft.VisualBasic.FileIO;
+using System.Data;
 using System.Drawing.Imaging;
 
 namespace AnyDeckBuilder
@@ -43,7 +45,10 @@ namespace AnyDeckBuilder
             if (string.IsNullOrEmpty(name))
                 return false;
 
-            if (m_cardTemplatesDict.TryGetValue(name, out template))
+            if (m_cardTemplatesDict == null || m_cardTemplatesDict.Values.Count == 0)
+                GetCardTemplates();
+
+            if (m_cardTemplatesDict.TryGetValue(name.ToLower(), out template))
                 return true;
             return false;
         }
@@ -65,7 +70,7 @@ namespace AnyDeckBuilder
                 Console.WriteLine("Template Summary\n" + template.ToString());
                 if (template != null)
                 {
-                    m_cardTemplatesDict.Add(template.name, template);
+                    m_cardTemplatesDict.Add(template.name.ToLower(), template);
                 }
             }
         }
@@ -87,6 +92,56 @@ namespace AnyDeckBuilder
             catch (Exception)
             {
                 return false;
+            }
+        }
+        public static DataTable ParseFile(StreamReader reader, params string[] delimeters)
+        {
+            if (delimeters.Length == 0)
+                return Card.Table.GetEmpty();
+            DataTable table = Card.Table.GetEmpty();
+            using (TextFieldParser parser = new TextFieldParser(reader))
+            {
+                bool hasHeaderBeenSkipped = false;
+                var headerFields = new string[0];
+                parser.SetDelimiters(delimeters);
+                while (!parser.EndOfData)
+                {
+                    string[]? fields = parser.ReadFields();
+                    if (fields == null)
+                        continue;
+
+                    if (!hasHeaderBeenSkipped)
+                    {
+                        if (fields[0].ToUpper().Equals("DECK"))
+                            table.Columns.Add("DECK").SetOrdinal(0);
+
+                        headerFields = fields;
+                        hasHeaderBeenSkipped = true;
+                        continue;
+                    }
+
+
+                    DataRow row = table.NewRow();
+
+                    Console.WriteLine($"Parsing {fields.Length} fields");
+                    if (table.Columns.Count == fields.Length || fields.Length < table.Columns.Count)
+                        row.ItemArray = fields;
+                    else if (fields.Length > table.Columns.Count)
+                    {
+                        Console.WriteLine("Expanding table...");
+                        for (int i = table.Columns.Count; i < fields.Length; i++)
+                        {
+                            table.Columns.Add($"{headerFields[i]}");
+                        }
+                        row = table.NewRow();
+                        row.ItemArray = fields;
+                        foreach (string item in row.ItemArray)
+                            Console.WriteLine(item);
+                    }
+                    table.Rows.Add(row);
+                    Console.WriteLine($"Rows: {table.Rows.Count}");
+                }
+                return table;
             }
         }
     }

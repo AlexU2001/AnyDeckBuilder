@@ -6,15 +6,7 @@
         {
             "Name": "Card ID",
             "controlType": 0,
-            "Values": [
-                "Red",
-                "Green",
-                "Defense",
-                "Blue",
-                "Pink",
-                "Orange",
-                "Power"
-            ],
+            "Values": null,
             "propertyAsTag": false
         },
         {
@@ -58,6 +50,12 @@
                 "Double or Nothing"
             ],
             "propertyAsTag": true
+        },
+        {
+            "Name": "Rarity",
+            "controlType": 0,
+            "Values": null,
+            "propertyAsTag": false
         }
     ]
 }

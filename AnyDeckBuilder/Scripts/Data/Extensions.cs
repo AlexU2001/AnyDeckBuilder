@@ -23,5 +23,13 @@
             }
             return true;
         }
+
+        public static string? GetValueAt(this DataGridViewRow row, int index)
+        {
+            var val = row.Cells[index].Value;
+            if (val == null)
+                return string.Empty;
+            return val.ToString();
+        }
     }
 }

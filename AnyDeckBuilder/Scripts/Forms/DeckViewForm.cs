@@ -1,6 +1,4 @@
 using AnyDeckBuilder.Data;
-using Microsoft.VisualBasic.FileIO;
-using System.Data;
 using System.Drawing.Imaging;
 using System.Security;
 using System.Text;
@@ -19,6 +17,23 @@ namespace AnyDeckBuilder
             AdjustContentSize();
             CardCustomizationForm.OnCardCreate += UpdateDeckView;
             CardCustomizationForm.OnCardUpdate += CardCustomizationForm_OnCardUpdate;
+
+            DataViewForm.OnSuccessfulImport += DataViewForm_OnSuccessfulImport;
+            DataViewForm.OnDeckImport += DataViewForm_OnDeckImport;
+        }
+
+        private void DataViewForm_OnDeckImport()
+        {
+            if (selectedDeck.cards == null || selectedDeck.cards.Count == 0)
+                ProjectFile.Current.DeleteDeck(Deck.DEFAULT_NAME);
+            LoadProjectData();
+            selectedDeck = ProjectFile.Current.decks[0];
+        }
+
+        private void DataViewForm_OnSuccessfulImport(Card[] cards)
+        {
+            foreach (Card card in cards)
+                AddCardToDeck(selectedDeck, card, true);
         }
 
         private void CardCustomizationForm_OnCardUpdate(object? sender, CardChangeArgs e)
@@ -40,7 +55,7 @@ namespace AnyDeckBuilder
         {
             if (ProjectFile.isNull || ProjectFile.Current.decks.Count == 0)
             {
-                selectedDeck = new Deck("Untitled Deck");
+                selectedDeck = new Deck(Deck.DEFAULT_NAME);
                 ProjectFile.Current.AddDeck(selectedDeck);
             }
             else
@@ -583,8 +598,8 @@ namespace AnyDeckBuilder
                     {
                         using (var sr = new StreamReader(stream))
                         {
-                            var table = ParseFile(sr, ",");
-                            var form = new DataViewForm(table);
+                            var table = Utility.ParseFile(sr, ",");
+                            var form = new DataViewForm(table, openCharDelimitedFile.FileName);
                             form.ShowDialog();
                         }
                     }
@@ -597,49 +612,6 @@ namespace AnyDeckBuilder
             }
         }
 
-        private DataTable ParseFile(StreamReader reader, params string[] delimeters)
-        {
-            if (delimeters.Length == 0)
-                return Card.Table.GetEmpty();
 
-            using (TextFieldParser parser = new TextFieldParser(reader))
-            {
-                bool hasHeaderBeenSkipped = false;
-                DataTable table = Card.Table.GetEmpty();
-                parser.SetDelimiters(delimeters);
-                while (!parser.EndOfData)
-                {
-                    DataRow row = table.NewRow();
-                    string[]? fields = parser.ReadFields();
-                    if (fields == null)
-                        continue;
-
-                    if (!hasHeaderBeenSkipped)
-                    {
-                        hasHeaderBeenSkipped = true;
-                        continue;
-                    }
-
-                    Console.WriteLine($"Parsing {fields.Length} fields");
-                    if (table.Columns.Count == fields.Length || fields.Length < table.Columns.Count)
-                        row.ItemArray = fields;
-                    else if (fields.Length > table.Columns.Count)
-                    {
-                        Console.WriteLine("Expanding table...");
-                        for (int i = table.Columns.Count; i < fields.Length; i++)
-                        {
-                            table.Columns.Add($"Property {i - Card.Table.COLUMNS_LENGTH}");
-                        }
-                        row = table.NewRow();
-                        row.ItemArray = fields;
-                        foreach (string item in row.ItemArray)
-                            Console.WriteLine(item);
-                    }
-                    table.Rows.Add(row);
-                    Console.WriteLine($"Rows: {table.Rows.Count}");
-                }
-                return table;
-            }
-        }
     }
 }

@@ -108,9 +108,11 @@ namespace AnyDeckBuilder
         private PropertyControl? AddPropertyControl(CardProperty property)
         {
             if (!property.isValid)
+            {
+                Console.WriteLine($"Unable to add {property}");
                 return null;
+            }
 
-            Console.WriteLine($"Adding {property}");
             PropertyControl prop = new PropertyControl(Card, property);
             prop.Name = property.Name + " propertyControl";
             propertiesPanel.Controls.Add(prop);

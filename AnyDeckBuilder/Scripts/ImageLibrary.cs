@@ -11,21 +11,22 @@
 
             Image image;
             if (Utility.PathIsUrl(path))
-                image = await GetImageViaURL(path);
+            {
+                var verifiedDownloadURL = TryConvertGoogleDriveToDownloadable(path);
+                image = await GetImageViaURL(verifiedDownloadURL);
+            }
             else
                 image = GetImageViaPath(path);
 
-            m_imageDictionary.Add(path, image);
+            if (image == null)
+                return null;
+
+            m_imageDictionary.TryAdd(path, image);
             return image;
         }
 
         static async Task<Image> GetImageViaURL(string url)
         {
-            Console.WriteLine("Line");
-            if (url.Contains("drive.google.com"))
-                TryConvertGoogleDriveToDownloadable(ref url);
-
-            Console.WriteLine("Getting image from url: " + url);
             using (HttpClient client = new HttpClient())
             using (HttpResponseMessage response = await client.GetAsync(url))
             {
@@ -48,18 +49,20 @@
             }
         }
 
-        private static void TryConvertGoogleDriveToDownloadable(ref string link)
+        private static string TryConvertGoogleDriveToDownloadable(string link)
         {
             if (link.Contains(DRIVE_DOWNLOAD_URL))
-                return;
+                return link;
 
             var array = link.Split("/d/");
             link = $"{DRIVE_DOWNLOAD_URL}" + array[1].Substring(0, 33);
-            Console.WriteLine($"Adjusted Link: {link}");
+            return link;
         }
 
         private static Image GetImageViaPath(string path)
         {
+            if (string.IsNullOrEmpty(path))
+                return Properties.Resources.Black;
             return new Bitmap(path);
         }
     }

@@ -104,12 +104,16 @@ function GetTagsFromCardData(cardData)
   local tags = {}
   local nextIndex = 1
   for index, property in ipairs(cardData["properties"]) do
+    if property["propertyAsTag"] == nil then
+        goto skip_property
+    end
     if property["propertyAsTag"] == true then
         for j, value in ipairs(property["Values"]) do
             tags[nextIndex] = value
             nextIndex = nextIndex + 1
         end
     end
+    ::skip_property::
   end
 
   return tags

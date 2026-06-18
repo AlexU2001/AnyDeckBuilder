@@ -9,6 +9,19 @@ namespace AnyDeckBuilder.Data
         public string? description;
         public List<string>? cards;
 
+
+        public const string DEFAULT_NAME = "Untitled Deck";
+        public static Deck Empty
+        {
+            get
+            {
+                if (_empty == null)
+                    _empty = new Deck(DEFAULT_NAME);
+                return _empty;
+            }
+        }
+        private static Deck? _empty;
+
         [JsonIgnore]
         public string exportName => exportPath == null || exportPath.Length == 0 ? "New Project" : Path.GetFileName(exportPath);
         /// <summary>

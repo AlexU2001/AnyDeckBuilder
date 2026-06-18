@@ -170,7 +170,7 @@
             propertiesPanel.BackColor = Color.Transparent;
             propertiesPanel.Location = new Point(388, 325);
             propertiesPanel.Name = "propertiesPanel";
-            propertiesPanel.Size = new Size(567, 269);
+            propertiesPanel.Size = new Size(567, 278);
             propertiesPanel.TabIndex = 11;
             // 
             // selectImageButton
