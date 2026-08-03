@@ -29,7 +29,7 @@ namespace AnyDeckBuilder
 
                 var displayName = template.name;
                 if (string.IsNullOrEmpty(template.name))
-                    displayName = "Unnamed Template";
+                    displayName = "Unknown Template";
 
                 templateComboBox.Items.Add(displayName);
                 if (templateComboBox.SelectedIndex == -1)
@@ -47,6 +47,8 @@ namespace AnyDeckBuilder
             this.Card = display.card;
             this.PreEditCard = new Card(display.card);
             InitializeComponent();
+
+            addToCurrentDeckCheckBox.Visible = false;
             InitializeSettings();
             LoadDefaults();
             LoadData();
@@ -68,22 +70,22 @@ namespace AnyDeckBuilder
             descriptionTextBox.Text = Card.description;
 
             if (Card.properties == null)
-                return;
-
-            if (Card.templateName != null)
             {
-                if (Utility.TryGetCardTemplate(Card.templateName, out var template))
-                {
-                    LoadProperties(template);
-                    return;
-                }
+                Console.WriteLine($"Card {Card.name} has no properties");
+                return;
             }
 
-            foreach (var template in Utility.GetCardTemplates())
+            if (Utility.TryGetCardTemplate(Card.templateName, out var loadedTemplate))
             {
-                if (Card.IsUsingTemplate(template))
+                LoadProperties(loadedTemplate);
+                return;
+            }
+
+            foreach (var savedTemplate in Utility.GetCardTemplates())
+            {
+                if (Card.IsUsingTemplate(savedTemplate))
                 {
-                    LoadProperties(template);
+                    LoadProperties(savedTemplate);
                     return;
                 }
             }
@@ -94,15 +96,15 @@ namespace AnyDeckBuilder
             if (template == null || template.properties == null)
                 return;
 
+            Console.WriteLine($"Loading template {template.name}");
             for (var i = 0; i < template.properties.Length; i++)
             {
+                Console.WriteLine($"Iterating through property {template.properties[i].Name}");
                 var property = template.properties[i];
                 var control = AddPropertyControl(property);
-                if (Card.properties != null)
-                {
-                    control?.SetValue(Card.properties[i].Values);
-                }
+                control?.SetValue(Card.properties[i].Values);
             }
+            propertiesPanel.Refresh();
         }
 
         private PropertyControl? AddPropertyControl(CardProperty property)
@@ -121,7 +123,12 @@ namespace AnyDeckBuilder
 
         private void ClearProperties()
         {
-            propertiesPanel.Controls.Clear();
+            for (var i = propertiesPanel.Controls.Count - 1; i >= 0; i--)
+            {
+                var control = propertiesPanel.Controls[i];
+                propertiesPanel.Controls.RemoveAt(i);
+                control.Dispose();
+            }
         }
 
         private void InitializeSettings()
@@ -201,7 +208,6 @@ namespace AnyDeckBuilder
 
         private void SaveCardPropertiesUsingTemplate(ref Card card, CardTemplate template)
         {
-            Console.WriteLine("Saving card properties");
             if (template.properties == null)
                 return;
 
@@ -214,7 +220,7 @@ namespace AnyDeckBuilder
                 {
                     case ControlType.Text:
                     case ControlType.Number:
-                        value = "Test value";
+                        value = "";
                         card.properties[i].SetValue(value);
                         break;
                     case ControlType.DropDown:
@@ -229,15 +235,14 @@ namespace AnyDeckBuilder
                         if (comboBox != null)
                         {
                             int index = comboBox.SelectedIndex;
+                            Console.WriteLine($"ComboBox Index is {comboBox.SelectedIndex} for {card.properties[i].Name}");
                             if (index == 0)
                             {
-                                if (string.IsNullOrEmpty(card.properties[i].Value))
-                                    card.properties[i].ClearValues();
+                                card.properties[i].ClearValues();
                                 continue;
                             }
 
                             value = template.properties[i].Values[index - 1];
-                            Console.WriteLine("Value: " + value);
                             card.properties[i].SetValue(value);
                         }
                         break;
@@ -258,27 +263,32 @@ namespace AnyDeckBuilder
         {
             int index = templateComboBox.SelectedIndex;
             string? name = templateComboBox.Items?[index].ToString();
-            Console.WriteLine($"Selection Changed: {index} {name}");
+            Console.WriteLine($"Selection Changed To Index: {index} Selection Name: {name}");
             if (Utility.TryGetCardTemplate(name, out var template))
             {
+                Console.WriteLine($"Retrieved template {template.name}");
                 if (template == null)
                 {
                     Console.WriteLine("Template Null exception");
                     return;
                 }
-                if (Card.IsUsingTemplate(template) || template.properties == null)
-                    return;
 
+                if (Card.IsUsingTemplate(template))
+                {
+                    Console.WriteLine($"Card {Card.name} is already using {template.name}");
+                    return;
+                }
+
+                Card.templateName = name;
                 ClearProperties();
                 LoadProperties(template);
             }
             else
             {
+                ClearProperties();
                 return;
             }
         }
-
-
 
         private void UrlTextBox_KeyDown(object sender, KeyEventArgs e)
         {

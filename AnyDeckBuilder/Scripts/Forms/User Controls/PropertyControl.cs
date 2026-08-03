@@ -18,8 +18,10 @@ namespace AnyDeckBuilder
             propertyLabel.Text = cardProperty.Name;
 
             if (!cardProperty.isValid)
+            {
+                Console.WriteLine($"Card {card.name} contains an invalid property: {cardProperty.Name}");
                 return;
-
+            }
             switch (cardProperty.controlType)
             {
                 case ControlType.Text:
@@ -51,6 +53,9 @@ namespace AnyDeckBuilder
 
         public void SetValue(params string[] values)
         {
+            if (values == null || values.Length == 0)
+                return;
+
             switch (cardProperty.controlType)
             {
                 case ControlType.Text:

@@ -20,7 +20,8 @@ namespace AnyDeckBuilder.Data
         public string[]? Values;
         [JsonIgnore]
         public string Value => Values == null ? string.Empty : Values[0];
-        [JsonIgnore] public bool isValid => (controlType.Equals(ControlType.Text) || controlType.Equals(ControlType.Number)) || (Values != null && Values.Length > 0);
+        [JsonIgnore] 
+        public bool isValid => (controlType.Equals(ControlType.Text) || controlType.Equals(ControlType.Number)) || (Values != null && Values.Length > 0);
 
         /// <summary>
         /// If the property should be treated as a tag when exporting to other platforms. Example, Table Top Simulator
@@ -44,9 +45,6 @@ namespace AnyDeckBuilder.Data
         #region Other
         public bool Equals(CardProperty other)
         {
-            if (Values.Length != other.Values.Length)
-                return false;
-
             return Name.Equals(other.Name) && controlType.Equals(other.controlType);
         }
 

@@ -48,9 +48,14 @@ namespace AnyDeckBuilder
             if (m_cardTemplatesDict == null || m_cardTemplatesDict.Values.Count == 0)
                 GetCardTemplates();
 
-            if (m_cardTemplatesDict.TryGetValue(name.ToLower(), out template))
+            if (m_cardTemplatesDict.TryGetValue(ConvertToTemplateKey(name), out template))
                 return true;
             return false;
+        }
+
+        private static string ConvertToTemplateKey(string str)
+        {
+            return str.Trim().Replace(" ", "");
         }
 
         private static void AddTemplatesToDictionary()
@@ -70,7 +75,7 @@ namespace AnyDeckBuilder
                 Console.WriteLine("Template Summary\n" + template.ToString());
                 if (template != null)
                 {
-                    m_cardTemplatesDict.Add(template.name.ToLower(), template);
+                    m_cardTemplatesDict.Add(ConvertToTemplateKey(template.name), template);
                 }
             }
         }

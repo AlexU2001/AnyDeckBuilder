@@ -46,7 +46,15 @@ namespace AnyDeckBuilder.Data
         }
         public override string ToString()
         {
-            return $"{guid},{name},{description},{imagePath}";
+            string toString = $"{guid} - {name}\n{description}\n{imagePath}\nProperties {properties.Length}";
+            foreach (var prop in properties)
+            {
+                if (prop == null)
+                    continue;
+
+                toString += $"\n{prop.Name}:{prop.Value}";
+            }
+            return toString;
         }
 
         public class Builder : Builder<Card>
@@ -54,71 +62,76 @@ namespace AnyDeckBuilder.Data
             [SetsRequiredMembers]
             public Builder()
             {
-                card = new Card();
+                instance = new Card();
             }
             public Builder SetGUID(string? GUID)
             {
                 if (string.IsNullOrEmpty(GUID))
                     return this;
-                card.guid = GUID;
+                instance.guid = GUID;
                 return this;
             }
 
             public Builder SetName(string? Name)
             {
-                card.name = Name;
+                instance.name = Name;
                 return this;
             }
 
             public Builder SetDescription(string? Description)
             {
-                card.description = Description;
+                instance.description = Description;
                 return this;
             }
 
             public Builder SetImagePath(string? ImagePath)
             {
-                card.imagePath = ImagePath;
+                instance.imagePath = ImagePath;
                 return this;
             }
 
             public Builder SetTemplate(string? templateName)
             {
-                card.templateName = templateName;
+                instance.templateName = templateName;
                 return this;
             }
 
             public Builder SetProperty(int index, string propertyValue)
             {
-                if (card == null)
+                if (instance == null)
                     return this;
 
-                if (card.properties == null || card.properties.Length <= index)
+                if (instance.properties == null || instance.properties.Length <= index)
                 {
-                    if (Utility.TryGetCardTemplate(card.templateName, out var template))
+                    if (Utility.TryGetCardTemplate(instance.templateName, out var template))
                     {
-                        if (card.properties == null || card.properties.Length == 0)
-                            card.properties = template.properties;
+                        if (instance.properties == null || instance.properties.Length == 0)
+                            instance.properties = template.properties;
                     }
                     else
                     {
-                        CardProperty[] originalProperties = card.properties;
-                        card.properties = new CardProperty[index + 1];
+                        CardProperty[] originalProperties = instance.properties;
+                        instance.properties = new CardProperty[index + 1];
                         if (originalProperties == null || originalProperties.Length == 0)
                         {
-                            for (int i = 0; i < card.properties.Length; i++)
-                                card.properties[i].Name = $"Property {i + 1}";
+                            for (int i = 0; i < instance.properties.Length; i++)
+                                instance.properties[i].Name = $"Property {i + 1}";
                         }
                         else
                         {
                             for (int i = 0; i < originalProperties.Length; i++)
-                                card.properties[i] = originalProperties[i];
+                                instance.properties[i] = originalProperties[i];
                         }
                     }
                 }
-
-                card.properties[index].SetValue(propertyValue);
+                instance.properties[index].SetValue(propertyValue);
                 return this;
+            }
+
+            public override Card Build()
+            {
+                Console.WriteLine($"Built Card {instance.name}\n{instance.ToString()}");
+                return base.Build();
             }
         }
 

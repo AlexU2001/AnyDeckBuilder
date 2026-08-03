@@ -566,11 +566,10 @@ namespace AnyDeckBuilder
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
             foreach (var file in files)
             {
-                Card card = new Card()
-                {
-                    name = Path.GetFileNameWithoutExtension(file),
-                    imagePath = file,
-                };
+                Card card = new Card.Builder().
+                    SetName(Path.GetFileNameWithoutExtension(file))
+                    .SetImagePath(file);
+
                 AddCardToDeck(selectedDeck, card, true);
             }
         }

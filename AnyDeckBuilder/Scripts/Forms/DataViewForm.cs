@@ -94,7 +94,7 @@ namespace AnyDeckBuilder
                     .SetTemplate(row.GetValueAt(index++));
 
                 for (int i = row.Cells.Count - 1; i >= max; i--)
-                    builder.SetProperty(i - max, row.GetValueAt(i));
+                    builder.SetProperty(i - max, row.GetValueAt(i - max));
 
                 Card card = builder.Build();
                 if (card != null && !string.IsNullOrEmpty(card.guid))
@@ -127,7 +127,10 @@ namespace AnyDeckBuilder
                     .SetTemplate(row.GetValueAt(index++));
 
                 for (int i = row.Cells.Count - 1; i >= BASE_COLUMNS_LENGTH; i--)
+                {
                     builder.SetProperty(i - BASE_COLUMNS_LENGTH, row.GetValueAt(i));
+                    Console.WriteLine($"Index: {i} Property Index: {i - BASE_COLUMNS_LENGTH}");
+                }
 
                 Card card = builder.Build();
                 ProjectFile.Current.AddCard(card);

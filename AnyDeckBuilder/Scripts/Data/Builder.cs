@@ -2,11 +2,11 @@
 {
     public abstract class Builder<T>
     {
-        public required T card;
+        public required T instance;
 
         public virtual T Build()
         {
-            return card;
+            return instance;
         }
 
         public static implicit operator T(Builder<T> builder) 

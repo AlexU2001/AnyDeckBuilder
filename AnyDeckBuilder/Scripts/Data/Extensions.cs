@@ -7,7 +7,7 @@
             if (card == null || template == null)
                 return false;
 
-            if (card.templateName != null && card.templateName.Equals(template.name))
+            if (!string.IsNullOrEmpty(card.templateName) && card.templateName.Equals(template.name))
                 return true;
 
             if (card.properties == null && template.properties == null)
@@ -26,8 +26,12 @@
 
         public static string? GetValueAt(this DataGridViewRow row, int index)
         {
+            if (row == null)
+            {
+                throw new Exception("Row cannot be null");
+            }
             var val = row.Cells[index].Value;
-            if (val == null)
+            if (string.IsNullOrEmpty(val.ToString()))
                 return string.Empty;
             return val.ToString();
         }
