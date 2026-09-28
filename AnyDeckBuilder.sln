@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.37216.2
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnyDeckBuilder", "AnyDeckBuilder\AnyDeckBuilder.csproj", "{04EBD9FB-EAFC-45B8-8A2E-E9CC9D8BEF94}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnyDeckMaui", "AnyDeckMaui\AnyDeckMaui.csproj", "{F5C01D01-464C-4AA6-BA97-C805CF9B3ACC}"
 EndProject
 Global
@@ -13,10 +11,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{04EBD9FB-EAFC-45B8-8A2E-E9CC9D8BEF94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{04EBD9FB-EAFC-45B8-8A2E-E9CC9D8BEF94}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{04EBD9FB-EAFC-45B8-8A2E-E9CC9D8BEF94}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{04EBD9FB-EAFC-45B8-8A2E-E9CC9D8BEF94}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F5C01D01-464C-4AA6-BA97-C805CF9B3ACC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F5C01D01-464C-4AA6-BA97-C805CF9B3ACC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5C01D01-464C-4AA6-BA97-C805CF9B3ACC}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
